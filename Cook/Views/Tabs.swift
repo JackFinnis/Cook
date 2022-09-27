@@ -8,9 +8,12 @@
 import SwiftUI
 
 struct Tabs: View {
+    @State var selectedTab = 1
+    
     var body: some View {
-        TabView {
+        TabView(selection: $selectedTab) {
             PlanView()
+                .tag(1)
                 .tabItem {
                     Label("Meal Plan", systemImage: "calendar")
                 }
@@ -18,9 +21,16 @@ struct Tabs: View {
             NavigationView {
                 RecipesView(selectedRecipe: .constant(nil), picker: false)
             }
+            .tag(2)
             .tabItem {
                 Label("Recipes", systemImage: "book.closed")
             }
+            
+            ListView(selectedTab: $selectedTab)
+                .tag(3)
+                .tabItem {
+                    Label("Shopping List", systemImage: "list.bullet")
+                }
         }
         .navigationViewStyle(.stack)
     }

@@ -85,17 +85,9 @@ struct RecipesView: View {
                     }
                 }
                 if recipes.isEmpty && !focused && !showNewRecipeField {
-                    VStack {
-                        Image(systemName: "doc.text")
-                            .font(.title)
-                            .foregroundColor(.secondary)
-                        Button("Add a recipe") {
-                            withAnimation {
-                                showNewRecipeField = true
-                                focused = true
-                            }
-                        }
-                        .buttonStyle(.borderedProminent)
+                    ErrorLabel("Add a recipe", systemName: "doc.text") {
+                        showNewRecipeField = true
+                        focused = true
                     }
                 }
             }

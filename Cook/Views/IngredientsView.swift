@@ -79,17 +79,9 @@ struct IngredientsView: View {
                     }
                 }
                 if ingredients.isEmpty && !focused && !showNewIngredientField {
-                    VStack {
-                        Image(systemName: "fork.knife")
-                            .font(.title)
-                            .foregroundColor(.secondary)
-                        Button("Add ingredients") {
-                            withAnimation {
-                                showNewIngredientField = true
-                                focused = true
-                            }
-                        }
-                        .buttonStyle(.borderedProminent)
+                    ErrorLabel("Add ingredients", systemName: "fork.knife") {
+                        showNewIngredientField = true
+                        focused = true
                     }
                 }
             }

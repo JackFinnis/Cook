@@ -27,6 +27,9 @@
 		04BA5EB428E3144A0080EF20 /* EditButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA5EB328E3144A0080EF20 /* EditButton.swift */; };
 		04C895B928E334CD00F94E01 /* DeleteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C895B828E334CD00F94E01 /* DeleteButton.swift */; };
 		04C895BB28E340C300F94E01 /* EditMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C895BA28E340C300F94E01 /* EditMode.swift */; };
+		04C895BD28E3779800F94E01 /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C895BC28E3779800F94E01 /* ListView.swift */; };
+		04C895BF28E38CE800F94E01 /* ListRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C895BE28E38CE800F94E01 /* ListRow.swift */; };
+		04C895C128E3916400F94E01 /* ErrorLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C895C028E3916400F94E01 /* ErrorLabel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,6 +54,9 @@
 		04BA5EB328E3144A0080EF20 /* EditButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditButton.swift; sourceTree = "<group>"; };
 		04C895B828E334CD00F94E01 /* DeleteButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteButton.swift; sourceTree = "<group>"; };
 		04C895BA28E340C300F94E01 /* EditMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditMode.swift; sourceTree = "<group>"; };
+		04C895BC28E3779800F94E01 /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
+		04C895BE28E38CE800F94E01 /* ListRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListRow.swift; sourceTree = "<group>"; };
+		04C895C028E3916400F94E01 /* ErrorLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorLabel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +108,8 @@
 				04BA5E8028E113C60080EF20 /* RecipesView.swift */,
 				04BA5E8D28E11AB70080EF20 /* RecipeView.swift */,
 				04BA5EA928E25FF20080EF20 /* IngredientsView.swift */,
+				04C895BC28E3779800F94E01 /* ListView.swift */,
+				04C895BE28E38CE800F94E01 /* ListRow.swift */,
 				04BA5EB528E3146D0080EF20 /* Extra */,
 			);
 			path = Views;
@@ -135,6 +143,7 @@
 				04C895B828E334CD00F94E01 /* DeleteButton.swift */,
 				04BA5EB328E3144A0080EF20 /* EditButton.swift */,
 				04BA5EAF28E275CB0080EF20 /* Row.swift */,
+				04C895C028E3916400F94E01 /* ErrorLabel.swift */,
 			);
 			path = Extra;
 			sourceTree = "<group>";
@@ -209,10 +218,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				04BA5E9228E11C630080EF20 /* Haptics.swift in Sources */,
+				04C895C128E3916400F94E01 /* ErrorLabel.swift in Sources */,
 				04BA5E6F28E113080080EF20 /* CookApp.swift in Sources */,
 				04BA5EAE28E275520080EF20 /* Meal.swift in Sources */,
 				04BA5EAC28E2737A0080EF20 /* PlanRow.swift in Sources */,
 				04BA5E8E28E11AB70080EF20 /* RecipeView.swift in Sources */,
+				04C895BF28E38CE800F94E01 /* ListRow.swift in Sources */,
 				04BA5E9428E11E4F0080EF20 /* Collection.swift in Sources */,
 				04BA5E8A28E1179A0080EF20 /* Model.xcdatamodeld in Sources */,
 				04BA5E8128E113C60080EF20 /* RecipesView.swift in Sources */,
@@ -220,6 +231,7 @@
 				04BA5E9C28E233010080EF20 /* Date.swift in Sources */,
 				04BA5EAA28E25FF20080EF20 /* IngredientsView.swift in Sources */,
 				04BA5E7D28E1133D0080EF20 /* Tabs.swift in Sources */,
+				04C895BD28E3779800F94E01 /* ListView.swift in Sources */,
 				04BA5E8528E115760080EF20 /* PlanView.swift in Sources */,
 				04BA5E9028E11BCE0080EF20 /* View.swift in Sources */,
 				04C895B928E334CD00F94E01 /* DeleteButton.swift in Sources */,

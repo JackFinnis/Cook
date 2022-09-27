@@ -7,6 +7,7 @@
     </entity>
     <entity name="Ingredient" representedClassName="Ingredient" syncable="YES" codeGenerationType="class">
         <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="lists" toMany="YES" deletionRule="Nullify" destinationEntity="ShoppingList" inverseName="ingredients" inverseEntity="ShoppingList"/>
         <relationship name="recipes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Recipe" inverseName="ingredients" inverseEntity="Recipe"/>
     </entity>
     <entity name="Recipe" representedClassName="Recipe" syncable="YES" codeGenerationType="class">
@@ -14,5 +15,8 @@
         <relationship name="ingredients" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Ingredient" inverseName="recipes" inverseEntity="Ingredient"/>
         <relationship name="lunches" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Day" inverseName="lunch" inverseEntity="Day"/>
         <relationship name="suppers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Day" inverseName="supper" inverseEntity="Day"/>
+    </entity>
+    <entity name="ShoppingList" representedClassName="ShoppingList" syncable="YES" codeGenerationType="class">
+        <relationship name="ingredients" toMany="YES" deletionRule="Nullify" destinationEntity="Ingredient" inverseName="lists" inverseEntity="Ingredient"/>
     </entity>
 </model>

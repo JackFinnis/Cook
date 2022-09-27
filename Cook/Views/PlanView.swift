@@ -88,7 +88,6 @@ struct PlanView: View {
     }
     
     func updateDays() {
-        context.refreshAllObjects()
         for i in 0...6 {
             let date = Date.now.addingTimeInterval(Double(i)*24*3600).startOfDay
             if !days.contains(where: { $0.date == date }) {
@@ -100,5 +99,7 @@ struct PlanView: View {
                 }
             }
         }
+        try? context.save()
+        context.refreshAllObjects()
     }
 }
