@@ -8,17 +8,43 @@
 
 /* Begin PBXBuildFile section */
 		04BA5E6F28E113080080EF20 /* CookApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA5E6E28E113080080EF20 /* CookApp.swift */; };
-		04BA5E7128E113080080EF20 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA5E7028E113080080EF20 /* ContentView.swift */; };
 		04BA5E7328E113090080EF20 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04BA5E7228E113090080EF20 /* Assets.xcassets */; };
-		04BA5E7628E113090080EF20 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04BA5E7528E113090080EF20 /* Preview Assets.xcassets */; };
+		04BA5E7D28E1133D0080EF20 /* Tabs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA5E7C28E1133D0080EF20 /* Tabs.swift */; };
+		04BA5E8128E113C60080EF20 /* RecipesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA5E8028E113C60080EF20 /* RecipesView.swift */; };
+		04BA5E8528E115760080EF20 /* PlanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA5E8428E115760080EF20 /* PlanView.swift */; };
+		04BA5E8728E116F50080EF20 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA5E8628E116F50080EF20 /* DataController.swift */; };
+		04BA5E8A28E1179A0080EF20 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 04BA5E8828E1179A0080EF20 /* Model.xcdatamodeld */; };
+		04BA5E8E28E11AB70080EF20 /* RecipeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA5E8D28E11AB70080EF20 /* RecipeView.swift */; };
+		04BA5E9028E11BCE0080EF20 /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA5E8F28E11BCE0080EF20 /* View.swift */; };
+		04BA5E9228E11C630080EF20 /* Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA5E9128E11C630080EF20 /* Haptics.swift */; };
+		04BA5E9428E11E4F0080EF20 /* Collection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA5E9328E11E4F0080EF20 /* Collection.swift */; };
+		04BA5E9C28E233010080EF20 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA5E9B28E233010080EF20 /* Date.swift */; };
+		04BA5EAA28E25FF20080EF20 /* IngredientsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA5EA928E25FF20080EF20 /* IngredientsView.swift */; };
+		04BA5EAC28E2737A0080EF20 /* PlanRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA5EAB28E2737A0080EF20 /* PlanRow.swift */; };
+		04BA5EAE28E275520080EF20 /* Meal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA5EAD28E275520080EF20 /* Meal.swift */; };
+		04BA5EB028E275CB0080EF20 /* Row.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA5EAF28E275CB0080EF20 /* Row.swift */; };
+		04BA5EB228E27CA30080EF20 /* Repeat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA5EB128E27CA30080EF20 /* Repeat.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		04BA5E6B28E113080080EF20 /* Cook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cook.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		04BA5E6E28E113080080EF20 /* CookApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CookApp.swift; sourceTree = "<group>"; };
-		04BA5E7028E113080080EF20 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		04BA5E7228E113090080EF20 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		04BA5E7528E113090080EF20 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		04BA5E7C28E1133D0080EF20 /* Tabs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tabs.swift; sourceTree = "<group>"; };
+		04BA5E8028E113C60080EF20 /* RecipesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipesView.swift; sourceTree = "<group>"; };
+		04BA5E8428E115760080EF20 /* PlanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanView.swift; sourceTree = "<group>"; };
+		04BA5E8628E116F50080EF20 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
+		04BA5E8928E1179A0080EF20 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		04BA5E8D28E11AB70080EF20 /* RecipeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeView.swift; sourceTree = "<group>"; };
+		04BA5E8F28E11BCE0080EF20 /* View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
+		04BA5E9128E11C630080EF20 /* Haptics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Haptics.swift; sourceTree = "<group>"; };
+		04BA5E9328E11E4F0080EF20 /* Collection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Collection.swift; sourceTree = "<group>"; };
+		04BA5E9B28E233010080EF20 /* Date.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
+		04BA5EA928E25FF20080EF20 /* IngredientsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientsView.swift; sourceTree = "<group>"; };
+		04BA5EAB28E2737A0080EF20 /* PlanRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanRow.swift; sourceTree = "<group>"; };
+		04BA5EAD28E275520080EF20 /* Meal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Meal.swift; sourceTree = "<group>"; };
+		04BA5EAF28E275CB0080EF20 /* Row.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Row.swift; sourceTree = "<group>"; };
+		04BA5EB128E27CA30080EF20 /* Repeat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Repeat.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,19 +78,48 @@
 			isa = PBXGroup;
 			children = (
 				04BA5E6E28E113080080EF20 /* CookApp.swift */,
-				04BA5E7028E113080080EF20 /* ContentView.swift */,
 				04BA5E7228E113090080EF20 /* Assets.xcassets */,
-				04BA5E7428E113090080EF20 /* Preview Content */,
+				04BA5E8828E1179A0080EF20 /* Model.xcdatamodeld */,
+				04BA5E9728E22C680080EF20 /* Views */,
+				04BA5E9928E22C800080EF20 /* Models */,
+				04BA5E9828E22C750080EF20 /* Extensions */,
 			);
 			path = Cook;
 			sourceTree = "<group>";
 		};
-		04BA5E7428E113090080EF20 /* Preview Content */ = {
+		04BA5E9728E22C680080EF20 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				04BA5E7528E113090080EF20 /* Preview Assets.xcassets */,
+				04BA5E7C28E1133D0080EF20 /* Tabs.swift */,
+				04BA5E8428E115760080EF20 /* PlanView.swift */,
+				04BA5EAB28E2737A0080EF20 /* PlanRow.swift */,
+				04BA5E8028E113C60080EF20 /* RecipesView.swift */,
+				04BA5E8D28E11AB70080EF20 /* RecipeView.swift */,
+				04BA5EA928E25FF20080EF20 /* IngredientsView.swift */,
+				04BA5EAF28E275CB0080EF20 /* Row.swift */,
 			);
-			path = "Preview Content";
+			path = Views;
+			sourceTree = "<group>";
+		};
+		04BA5E9828E22C750080EF20 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				04BA5E8F28E11BCE0080EF20 /* View.swift */,
+				04BA5E9B28E233010080EF20 /* Date.swift */,
+				04BA5E9328E11E4F0080EF20 /* Collection.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		04BA5E9928E22C800080EF20 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				04BA5E8628E116F50080EF20 /* DataController.swift */,
+				04BA5E9128E11C630080EF20 /* Haptics.swift */,
+				04BA5EAD28E275520080EF20 /* Meal.swift */,
+				04BA5EB128E27CA30080EF20 /* Repeat.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -125,7 +180,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				04BA5E7628E113090080EF20 /* Preview Assets.xcassets in Resources */,
 				04BA5E7328E113090080EF20 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -137,8 +191,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				04BA5E7128E113080080EF20 /* ContentView.swift in Sources */,
+				04BA5E9228E11C630080EF20 /* Haptics.swift in Sources */,
 				04BA5E6F28E113080080EF20 /* CookApp.swift in Sources */,
+				04BA5EAE28E275520080EF20 /* Meal.swift in Sources */,
+				04BA5EAC28E2737A0080EF20 /* PlanRow.swift in Sources */,
+				04BA5E8E28E11AB70080EF20 /* RecipeView.swift in Sources */,
+				04BA5E9428E11E4F0080EF20 /* Collection.swift in Sources */,
+				04BA5E8A28E1179A0080EF20 /* Model.xcdatamodeld in Sources */,
+				04BA5E8128E113C60080EF20 /* RecipesView.swift in Sources */,
+				04BA5EB228E27CA30080EF20 /* Repeat.swift in Sources */,
+				04BA5E9C28E233010080EF20 /* Date.swift in Sources */,
+				04BA5EAA28E25FF20080EF20 /* IngredientsView.swift in Sources */,
+				04BA5E7D28E1133D0080EF20 /* Tabs.swift in Sources */,
+				04BA5E8528E115760080EF20 /* PlanView.swift in Sources */,
+				04BA5E9028E11BCE0080EF20 /* View.swift in Sources */,
+				04BA5EB028E275CB0080EF20 /* Row.swift in Sources */,
+				04BA5E8728E116F50080EF20 /* DataController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -266,7 +334,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Cook/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 4CQW4CFFYT;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -275,6 +343,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -295,7 +364,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Cook/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 4CQW4CFFYT;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -304,6 +373,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -339,6 +409,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		04BA5E8828E1179A0080EF20 /* Model.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				04BA5E8928E1179A0080EF20 /* Model.xcdatamodel */,
+			);
+			currentVersion = 04BA5E8928E1179A0080EF20 /* Model.xcdatamodel */;
+			path = Model.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 04BA5E6328E113080080EF20 /* Project object */;
 }

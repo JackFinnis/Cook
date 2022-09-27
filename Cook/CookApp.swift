@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct CookApp: App {
+    @StateObject var dataController = DataController()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            Tabs()
+                .environment(\.managedObjectContext, dataController.container.viewContext)
         }
     }
 }
