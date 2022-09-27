@@ -33,7 +33,7 @@ struct RecipesView: View {
             List(selection: $selectedRecipe) {
                 ForEach(filteredRecipes) { recipe in
                     NavigationLink(recipe.name ?? "") {
-                        RecipeView(recipe: recipe)
+                        RecipeView(recipe)
                     }
                     .tag(recipe)
                 }

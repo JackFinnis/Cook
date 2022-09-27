@@ -14,6 +14,7 @@ struct PlanRow: View {
     @ObservedObject var day: Day
     let meal: Meal
     let editing: Bool
+    let justSuppers: Bool
     
     var recipe: Recipe? {
         switch meal {
@@ -27,16 +28,17 @@ struct PlanRow: View {
     var body: some View {
         NavigationLink {
             if let recipe {
-                RecipeView(recipe: recipe)
+                RecipeView(recipe)
             } else {
                 RecipesView(selectedRecipe: $selectedRecipe, picker: true)
             }
         } label: {
             Row {
-                Text(meal.rawValue)
+                Text(justSuppers ? day.date?.formattedApple() ?? "" : meal.rawValue)
             } trailing: {
                 if let recipe {
                     Text(recipe.name ?? "")
+                        .foregroundColor(.secondary)
                     if editing {
                         Button {
                             removeRecipe(recipe)
@@ -63,6 +65,7 @@ struct PlanRow: View {
     }
     
     func didSelectRecipe(_ recipe: Recipe?) {
+        selectedRecipe = nil
         guard let recipe else { return }
         switch meal {
         case .lunch:

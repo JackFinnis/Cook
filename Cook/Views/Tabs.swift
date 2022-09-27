@@ -22,6 +22,7 @@ struct Tabs: View {
                 Label("Recipes", systemImage: "book.closed")
             }
         }
+        .navigationViewStyle(.stack)
     }
 }
 

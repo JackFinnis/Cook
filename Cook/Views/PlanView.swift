@@ -12,7 +12,9 @@ struct PlanView: View {
     @Environment(\.managedObjectContext) var context
     @FetchRequest(sortDescriptors: []) var days: FetchedResults<Day>
     @State var repeatEvery = Repeat(weeks: UserDefaults.standard.integer(forKey: "repeatEvery"))
-    @State var editing = false
+    @State var justSuppers = UserDefaults.standard.bool(forKey: "justSuppers")
+    @State var editMode = EditMode.inactive
+    var editing: Bool { editMode == .active }
     
     var filteredDays: [Day] {
         days.filter { day in
@@ -26,30 +28,33 @@ struct PlanView: View {
         NavigationView {
             List {
                 ForEach(filteredDays) { day in
-                    Section {
-                        PlanRow(day: day, meal: .lunch, editing: editing)
-                        PlanRow(day: day, meal: .supper, editing: editing)
-                    } header: {
-                        Text(day.date?.formattedApple() ?? "")
+                    if justSuppers {
+                        PlanRow(day: day, meal: .supper, editing: editing, justSuppers: justSuppers)
+                    } else {
+                        Section {
+                            PlanRow(day: day, meal: .lunch, editing: editing, justSuppers: justSuppers)
+                            PlanRow(day: day, meal: .supper, editing: editing, justSuppers: justSuppers)
+                        } header: {
+                            Text(day.date?.formattedApple() ?? "")
+                        }
+                        .headerProminence(.increased)
                     }
-                    .headerProminence(.increased)
                 }
             }
             .navigationTitle("Meal Plan")
             .onAppear(perform: updateDays)
             .onChange(of: repeatEvery, perform: updateRepeatEvery)
+            .onChange(of: justSuppers, perform: updateJustSuppers)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button(editing ? "Done" : "Edit") {
-                        withAnimation {
-                            editing.toggle()
-                        }
+                    if filteredDays.reduce(false) { $0 || $1.lunch != nil || $1.supper != nil } {
+                        EditButton(editMode: $editMode)
                     }
-                    .font(.body.weight(editing ? .semibold : .regular))
-                    .animation(.none, value: editing)
                 }
                 ToolbarItem(placement: .primaryAction) {
                     Menu {
+                        Toggle("Plan suppers only", isOn: $justSuppers.animation())
+                        
                         Picker("Repeat Every", selection: $repeatEvery) {
                             let none = Repeat(weeks: 0)
                             Text(none.name)
@@ -62,11 +67,15 @@ struct PlanView: View {
                             }
                         }
                     } label: {
-                        Image(systemName: "clock.arrow.circlepath")
+                        Image(systemName: "ellipsis.circle")
                     }
                 }
             }
         }
+    }
+    
+    func updateJustSuppers(_ newJustSuppers: Bool) {
+        UserDefaults.standard.set(justSuppers, forKey: "justSuppers")
     }
     
     func updateRepeatEvery(_ newRepeatEvery: Repeat) {

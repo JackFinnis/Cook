@@ -26,13 +26,13 @@ enum Repeat: Hashable {
         case .weeks(let weeks):
             switch weeks {
             case 0:
-                return "No Repeat"
+                return "Don't repeat meals"
             case 1:
-                return "Every week"
+                return "Repeat every week"
             case 4:
-                return "Every month"
+                return "Repeat every month"
             default:
-                return "Every \(weeks) weeks"
+                return "Repeat every \(weeks) weeks"
             }
         }
     }
