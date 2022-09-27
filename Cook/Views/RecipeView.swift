@@ -43,17 +43,29 @@ struct RecipeView: View {
             Form {
                 Section {
                     ForEach(sortedIngredients) { ingredient in
-                        Text(ingredient.name ?? "")
+                        Row {
+                            Text(ingredient.name ?? "")
+                        } trailing: {
+                            DeleteButton(editMode: editMode) {
+                                removeIngredient(ingredient)
+                            }
+                        }
+                        .swipeActions {
+                            Button("Remove", role: .destructive) {
+                                removeIngredient(ingredient)
+                            }
+                        }
                     }
-                    .onDelete(perform: deleteIngredients)
                     
-                    NavigationLink {
-                        IngredientsView(selection: $ingredients)
-                    } label: {
-                        TextField("Ingredient", text: $newIngredientName)
-                            .onSubmit(submitIngredient)
-                            .focused($focused)
-                            .submitLabel(.done)
+                    if !editMode.isEditing {
+                        NavigationLink {
+                            IngredientsView(selection: $ingredients)
+                        } label: {
+                            TextField("Add Ingredient", text: $newIngredientName)
+                                .onSubmit(submitIngredient)
+                                .focused($focused)
+                                .submitLabel(.done)
+                        }
                     }
                 } header: {
                     Row {
@@ -70,7 +82,6 @@ struct RecipeView: View {
         .background(Color(.systemGroupedBackground))
         .onChange(of: ingredients, perform: saveIngredients)
         .animation(.default, value: sortedIngredients)
-        .environment(\.editMode, $editMode)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
@@ -81,13 +92,15 @@ struct RecipeView: View {
     }
     
     func submitIngredient() {
-        guard newIngredientName.isNotEmpty else { return }
+        let name = newIngredientName.trimmingCharacters(in: .whitespaces)
+        guard name.isNotEmpty else { newIngredientName = ""; return }
+        
         let newIngredient: Ingredient
-        if let ingredient = allIngredients.first(where: { $0.name == newIngredientName }) {
+        if let ingredient = allIngredients.first(where: { $0.name == name }) {
             newIngredient = ingredient
         } else {
             let ingredient = Ingredient(context: context)
-            ingredient.name = newIngredientName
+            ingredient.name = name
             try? context.save()
             newIngredient = ingredient
         }
@@ -108,12 +121,9 @@ struct RecipeView: View {
         recipe.name = name
         try? context.save()
     }
-    
-    func deleteIngredients(at offsets: IndexSet) {
-        for index in offsets {
-            let ingredient = sortedIngredients[index]
-            ingredients.remove(ingredient)
-        }
+
+    func removeIngredient(_ ingredient: Ingredient) {
+        ingredients.remove(ingredient)
     }
     
     func deleteRecipe() {

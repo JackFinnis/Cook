@@ -12,6 +12,8 @@ struct IngredientsView: View {
     @Environment(\.managedObjectContext) var context
     @State var newIngredientName = ""
     @State var editMode = EditMode.inactive
+    @State var selecting = EditMode.active
+    @State var showNewIngredientField = false
     @FocusState var focused: Bool
     @State var text = ""
     
@@ -28,55 +30,85 @@ struct IngredientsView: View {
     
     var body: some View {
         ScrollViewReader { list in
-            List(selection: $selection) {
-                ForEach(filteredIngredients) { ingredient in
-                    Row {
-                        Text(ingredient.name ?? "")
-                            .tag(ingredient)
-                    } trailing: {
-                        DeleteButton(editMode: editMode) {
-                            deleteIngredient(ingredient)
+            ZStack {
+                List(selection: $selection) {
+                    ForEach(filteredIngredients) { ingredient in
+                        Row {
+                            Text(ingredient.name ?? "")
+                                .tag(ingredient)
+                        } trailing: {
+                            DeleteButton(editMode: editMode) {
+                                deleteIngredient(ingredient)
+                            }
+                            .buttonStyle(.borderless)
                         }
-                        .buttonStyle(.borderless)
+                        .tag(ingredient)
                     }
-                    .tag(ingredient)
+                    
+                    if showNewIngredientField {
+                        TextField("New Ingredient", text: $newIngredientName)
+                            .id("New Ingredient")
+                            .onSubmit(submitIngredient)
+                            .focused($focused)
+                            .submitLabel(.done)
+                    }
                 }
-                
-                TextField("Ingredient", text: $newIngredientName)
-                    .id("New Ingredient")
-                    .onSubmit(submitIngredient)
-                    .focused($focused)
-                    .submitLabel(.done)
-            }
-            .environment(\.editMode, .constant(.active))
-            .navigationBarTitleDisplayMode(.large)
-            .navigationTitle("Ingredients")
-            .searchable(text: $text)
-            .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    HStack {
-                        if !editMode.isEditing {
-                            Button {
-                                list.scrollTo("New Ingredient")
-                                focused = true
-                            } label: {
-                                Image(systemName: "plus")
+                .environment(\.editMode, $selecting)
+                .navigationBarTitleDisplayMode(.large)
+                .navigationTitle("Ingredients")
+                .searchable(text: $text, placement: .navigationBarDrawer)
+                .toolbar {
+                    ToolbarItem(placement: .primaryAction) {
+                        HStack {
+                            if !editMode.isEditing {
+                                Button {
+                                    withAnimation {
+                                        showNewIngredientField = true
+                                        list.scrollTo("New Ingredient")
+                                        focused = true
+                                    }
+                                } label: {
+                                    Image(systemName: "plus")
+                                }
+                            }
+                            if ingredients.isNotEmpty {
+                                EditButton(editMode: $editMode)
                             }
                         }
-                        if ingredients.isNotEmpty {
-                            EditButton(editMode: $editMode)
-                        }
+                        .animation(.none, value: editMode)
                     }
-                    .animation(.none, value: editMode)
                 }
+                if ingredients.isEmpty && !focused && !showNewIngredientField {
+                    VStack {
+                        Image(systemName: "fork.knife")
+                            .font(.title)
+                            .foregroundColor(.secondary)
+                        Button("Add ingredients") {
+                            withAnimation {
+                                showNewIngredientField = true
+                                focused = true
+                            }
+                        }
+                        .buttonStyle(.borderedProminent)
+                    }
+                }
+            }
+        }
+        .onAppear {
+            showNewIngredientField = ingredients.isNotEmpty
+        }
+        .onChange(of: editMode) { editMode in
+            withAnimation {
+                selecting = editMode.isEditing ? .inactive : .active
             }
         }
     }
     
     func submitIngredient() {
-        guard !ingredients.contains(where: { $0.name == newIngredientName }),
-              newIngredientName.isNotEmpty
-        else { return }
+        let name = newIngredientName.trimmingCharacters(in: .whitespaces)
+        guard !ingredients.contains(where: { $0.name == name }),
+              name.isNotEmpty
+        else { newIngredientName = ""; return }
         
         let ingredient = Ingredient(context: context)
         ingredient.name = newIngredientName

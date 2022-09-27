@@ -19,9 +19,10 @@ struct DeleteButton: View {
                 }
             } label: {
                 Image(systemName: "minus.circle.fill")
+                
             }
             .font(.title2)
-            .foregroundColor(.red)
+            .foregroundStyle(.white, .red)
             .transition(.move(edge: .trailing).combined(with: .opacity))
             .buttonStyle(.borderless)
         }

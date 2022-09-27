@@ -12,7 +12,9 @@ struct RecipesView: View {
     @Environment(\.managedObjectContext) var context
     @State var showNewRecipeView = false
     @State var newRecipeName = ""
+    @State var showNewRecipeField = false
     @State var editMode = EditMode.inactive
+    @State var selecting = EditMode.inactive
     @FocusState var focused: Bool
     @State var text = ""
     
@@ -31,50 +33,80 @@ struct RecipesView: View {
     
     var body: some View {
         ScrollViewReader { list in
-            List(selection: $selectedRecipe) {
-                ForEach(filteredRecipes) { recipe in
-                    Row {
-                        Text(recipe.name ?? "")
-                        if !editMode.isEditing && !picker {
-                            NavigationLink("") {
-                                RecipeView(recipe)
+            ZStack {
+                List(selection: $selectedRecipe) {
+                    ForEach(filteredRecipes) { recipe in
+                        Row {
+                            Text(recipe.name ?? "")
+                            if !editMode.isEditing && !picker {
+                                NavigationLink("") {
+                                    RecipeView(recipe)
+                                }
+                            }
+                        } trailing: {
+                            DeleteButton(editMode: editMode) {
+                                deleteRecipe(recipe)
                             }
                         }
-                    } trailing: {
-                        DeleteButton(editMode: editMode) {
-                            deleteRecipe(recipe)
-                        }
+                        .tag(recipe)
                     }
-                    .tag(recipe)
+                    
+                    if showNewRecipeField {
+                        TextField("New Recipe", text: $newRecipeName)
+                            .id("New Recipe")
+                            .submitLabel(.done)
+                            .focused($focused)
+                            .onSubmit(submitNewRecipe)
+                    }
                 }
-                
-                TextField("New Recipe", text: $newRecipeName)
-                    .id("New Recipe")
-                    .submitLabel(.done)
-                    .focused($focused)
-                    .onSubmit(submitNewRecipe)
-            }
-            .environment(\.editMode, .constant(picker ? .active : .inactive))
-            .animation(.default, value: filteredRecipes)
-            .navigationTitle("Recipes")
-            .searchable(text: $text.animation())
-            .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    HStack {
-                        if !editMode.isEditing {
-                            Button {
-                                list.scrollTo("New Recipe")
+                .environment(\.editMode, $selecting)
+                .animation(.default, value: filteredRecipes)
+                .navigationTitle("Recipes")
+                .searchable(text: $text.animation(), placement: .navigationBarDrawer)
+                .toolbar {
+                    ToolbarItem(placement: .primaryAction) {
+                        HStack {
+                            if !editMode.isEditing {
+                                Button {
+                                    withAnimation {
+                                        showNewRecipeField = true
+                                        list.scrollTo("New Recipe")
+                                        focused = true
+                                    }
+                                } label: {
+                                    Image(systemName: "plus")
+                                }
+                            }
+                            if recipes.isNotEmpty {
+                                EditButton(editMode: $editMode)
+                            }
+                        }
+                        .animation(.none, value: editMode)
+                    }
+                }
+                if recipes.isEmpty && !focused && !showNewRecipeField {
+                    VStack {
+                        Image(systemName: "doc.text")
+                            .font(.title)
+                            .foregroundColor(.secondary)
+                        Button("Add a recipe") {
+                            withAnimation {
+                                showNewRecipeField = true
                                 focused = true
-                            } label: {
-                                Image(systemName: "plus")
                             }
                         }
-                        if recipes.isNotEmpty {
-                            EditButton(editMode: $editMode)
-                        }
+                        .buttonStyle(.borderedProminent)
                     }
-                    .animation(.none, value: editMode)
                 }
+            }
+        }
+        .onAppear {
+            selecting = picker ? .active : .inactive
+            showNewRecipeField = recipes.isNotEmpty
+        }
+        .onChange(of: editMode) { editMode in
+            withAnimation {
+                selecting = picker && !editMode.isEditing ? .active : .inactive
             }
         }
     }
