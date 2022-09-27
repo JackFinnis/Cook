@@ -10,6 +10,10 @@ import UIKit
 struct Haptics {
     static let generator = UINotificationFeedbackGenerator()
     
+    static func tap() {
+        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+    }
+    
     static func success() {
         generator.notificationOccurred(.success)
     }

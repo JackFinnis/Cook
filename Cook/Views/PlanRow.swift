@@ -82,7 +82,7 @@ struct PlanRow: View {
             day.supper = recipe
         }
         try? context.save()
-        Haptics.success()
+        Haptics.tap()
     }
     
     func removeRecipe(_ recipe: Recipe) {

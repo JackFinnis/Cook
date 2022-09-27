@@ -135,7 +135,7 @@ struct RecipeView: View {
     func deleteRecipe() {
         context.delete(recipe)
         try? context.save()
-        Haptics.success()
+        Haptics.tap()
         dismiss()
     }
 }

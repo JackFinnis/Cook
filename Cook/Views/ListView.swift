@@ -141,7 +141,7 @@ struct ListView: View {
         if let newSelectedIngredient {
             if ingredients.contains(newSelectedIngredient) {
                 ingredients.remove(newSelectedIngredient)
-                Haptics.success()
+                Haptics.tap()
             } else {
                 ingredients.insert(newSelectedIngredient)
             }
