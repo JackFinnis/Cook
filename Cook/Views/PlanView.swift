@@ -14,7 +14,6 @@ struct PlanView: View {
     @State var repeatEvery = Repeat(weeks: UserDefaults.standard.integer(forKey: "repeatEvery"))
     @State var justSuppers = UserDefaults.standard.bool(forKey: "justSuppers")
     @State var editMode = EditMode.inactive
-    var editing: Bool { editMode == .active }
     
     var filteredDays: [Day] {
         days.filter { day in
@@ -24,16 +23,20 @@ struct PlanView: View {
         }
     }
     
+    var empty: Bool {
+        filteredDays.reduce(true) { $0 && (justSuppers ? true : $1.lunch == nil) && $1.supper == nil }
+    }
+    
     var body: some View {
         NavigationView {
             List {
                 ForEach(filteredDays) { day in
                     if justSuppers {
-                        PlanRow(day: day, meal: .supper, editing: editing, justSuppers: justSuppers)
+                        PlanRow(day: day, meal: .supper, editMode: editMode, justSuppers: justSuppers)
                     } else {
                         Section {
-                            PlanRow(day: day, meal: .lunch, editing: editing, justSuppers: justSuppers)
-                            PlanRow(day: day, meal: .supper, editing: editing, justSuppers: justSuppers)
+                            PlanRow(day: day, meal: .lunch, editMode: editMode, justSuppers: justSuppers)
+                            PlanRow(day: day, meal: .supper, editMode: editMode, justSuppers: justSuppers)
                         } header: {
                             Text(day.date?.formattedApple() ?? "")
                         }
@@ -47,27 +50,29 @@ struct PlanView: View {
             .onChange(of: justSuppers, perform: updateJustSuppers)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    if filteredDays.reduce(false) { $0 || $1.lunch != nil || $1.supper != nil } {
+                    if !empty {
                         EditButton(editMode: $editMode)
                     }
                 }
                 ToolbarItem(placement: .primaryAction) {
-                    Menu {
-                        Toggle("Plan suppers only", isOn: $justSuppers.animation())
-                        
-                        Picker("Repeat Every", selection: $repeatEvery) {
-                            let none = Repeat(weeks: 0)
-                            Text(none.name)
-                                .tag(none)
+                    if !editMode.isEditing {
+                        Menu {
+                            Toggle("Only plan suppers", isOn: $justSuppers.animation())
                             
-                            ForEach(1...4, id: \.self) { weeks in
-                                let repeatEvery = Repeat(weeks: weeks)
-                                Text(repeatEvery.name)
-                                    .tag(repeatEvery)
+                            Picker("Repeat Every", selection: $repeatEvery) {
+                                let none = Repeat(weeks: 0)
+                                Text(none.name)
+                                    .tag(none)
+                                
+                                ForEach(1...4, id: \.self) { weeks in
+                                    let repeatEvery = Repeat(weeks: weeks)
+                                    Text(repeatEvery.name)
+                                        .tag(repeatEvery)
+                                }
                             }
+                        } label: {
+                            Image(systemName: "ellipsis.circle")
                         }
-                    } label: {
-                        Image(systemName: "ellipsis.circle")
                     }
                 }
             }
@@ -83,6 +88,7 @@ struct PlanView: View {
     }
     
     func updateDays() {
+        context.refreshAllObjects()
         for i in 0...6 {
             let date = Date.now.addingTimeInterval(Double(i)*24*3600).startOfDay
             if !days.contains(where: { $0.date == date }) {
@@ -92,7 +98,6 @@ struct PlanView: View {
                     day.lunch = previousDay.lunch
                     day.supper = previousDay.supper
                 }
-                try? context.save()
             }
         }
     }

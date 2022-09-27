@@ -12,6 +12,7 @@ struct RecipesView: View {
     @Environment(\.managedObjectContext) var context
     @State var showNewRecipeView = false
     @State var newRecipeName = ""
+    @State var editMode = EditMode.inactive
     @FocusState var focused: Bool
     @State var text = ""
     
@@ -32,8 +33,17 @@ struct RecipesView: View {
         ScrollViewReader { list in
             List(selection: $selectedRecipe) {
                 ForEach(filteredRecipes) { recipe in
-                    NavigationLink(recipe.name ?? "") {
-                        RecipeView(recipe)
+                    Row {
+                        Text(recipe.name ?? "")
+                        if !editMode.isEditing && !picker {
+                            NavigationLink("") {
+                                RecipeView(recipe)
+                            }
+                        }
+                    } trailing: {
+                        DeleteButton(editMode: editMode) {
+                            deleteRecipe(recipe)
+                        }
                     }
                     .tag(recipe)
                 }
@@ -50,12 +60,20 @@ struct RecipesView: View {
             .searchable(text: $text.animation())
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
-                    Button {
-                        list.scrollTo("New Recipe")
-                        focused = true
-                    } label: {
-                        Image(systemName: "plus")
+                    HStack {
+                        if !editMode.isEditing {
+                            Button {
+                                list.scrollTo("New Recipe")
+                                focused = true
+                            } label: {
+                                Image(systemName: "plus")
+                            }
+                        }
+                        if recipes.isNotEmpty {
+                            EditButton(editMode: $editMode)
+                        }
                     }
+                    .animation(.none, value: editMode)
                 }
             }
         }
@@ -68,5 +86,10 @@ struct RecipesView: View {
         try? context.save()
         newRecipeName = ""
         focused = true
+    }
+    
+    func deleteRecipe(_ recipe: Recipe) {
+        context.delete(recipe)
+        try? context.save()
     }
 }

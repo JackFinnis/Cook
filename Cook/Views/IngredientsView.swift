@@ -11,6 +11,7 @@ struct IngredientsView: View {
     @FetchRequest(sortDescriptors: []) var ingredients: FetchedResults<Ingredient>
     @Environment(\.managedObjectContext) var context
     @State var newIngredientName = ""
+    @State var editMode = EditMode.inactive
     @FocusState var focused: Bool
     @State var text = ""
     
@@ -29,10 +30,17 @@ struct IngredientsView: View {
         ScrollViewReader { list in
             List(selection: $selection) {
                 ForEach(filteredIngredients) { ingredient in
-                    Text(ingredient.name ?? "")
-                        .tag(ingredient)
+                    Row {
+                        Text(ingredient.name ?? "")
+                            .tag(ingredient)
+                    } trailing: {
+                        DeleteButton(editMode: editMode) {
+                            deleteIngredient(ingredient)
+                        }
+                        .buttonStyle(.borderless)
+                    }
+                    .tag(ingredient)
                 }
-                .onDelete(perform: deleteIngredients)
                 
                 TextField("Ingredient", text: $newIngredientName)
                     .id("New Ingredient")
@@ -46,12 +54,20 @@ struct IngredientsView: View {
             .searchable(text: $text)
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
-                    Button {
-                        list.scrollTo("New Ingredient")
-                        focused = true
-                    } label: {
-                        Image(systemName: "plus")
+                    HStack {
+                        if !editMode.isEditing {
+                            Button {
+                                list.scrollTo("New Ingredient")
+                                focused = true
+                            } label: {
+                                Image(systemName: "plus")
+                            }
+                        }
+                        if ingredients.isNotEmpty {
+                            EditButton(editMode: $editMode)
+                        }
                     }
+                    .animation(.none, value: editMode)
                 }
             }
         }
@@ -64,16 +80,15 @@ struct IngredientsView: View {
         
         let ingredient = Ingredient(context: context)
         ingredient.name = newIngredientName
-        try? context.save()
-        newIngredientName = ""
+        withAnimation {
+            try? context.save()
+            newIngredientName = ""
+        }
         focused = true
     }
     
-    func deleteIngredients(at offsets: IndexSet) {
-        for index in offsets {
-            let ingredient = filteredIngredients[index]
-            context.delete(ingredient)
-            try? context.save()
-        }
+    func deleteIngredient(_ ingredient: Ingredient) {
+        context.delete(ingredient)
+        try? context.save()
     }
 }

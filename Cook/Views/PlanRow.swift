@@ -13,7 +13,7 @@ struct PlanRow: View {
     
     @ObservedObject var day: Day
     let meal: Meal
-    let editing: Bool
+    let editMode: EditMode
     let justSuppers: Bool
     
     var recipe: Recipe? {
@@ -25,30 +25,40 @@ struct PlanRow: View {
         }
     }
     
+    var leading: String {
+        justSuppers ? day.date?.formattedApple() ?? "" : meal.rawValue
+    }
+    
     var body: some View {
-        NavigationLink {
-            if let recipe {
-                RecipeView(recipe)
-            } else {
-                RecipesView(selectedRecipe: $selectedRecipe, picker: true)
-            }
-        } label: {
-            Row {
-                Text(justSuppers ? day.date?.formattedApple() ?? "" : meal.rawValue)
-            } trailing: {
-                if let recipe {
-                    Text(recipe.name ?? "")
-                        .foregroundColor(.secondary)
-                    if editing {
-                        Button {
+        HStack {
+            if editMode.isEditing {
+                Row {
+                    Text(leading)
+                } trailing: {
+                    if let recipe {
+                        Text(recipe.name ?? "")
+                            .foregroundColor(.secondary)
+                            .transition(.move(edge: .trailing).combined(with: .opacity))
+                        DeleteButton(editMode: editMode) {
                             removeRecipe(recipe)
-                        } label: {
-                            Image(systemName: "minus.circle.fill")
                         }
-                        .font(.title2)
-                        .foregroundColor(.red)
-                        .transition(.move(edge: .trailing).combined(with: .opacity))
                     }
+                }
+            } else if let recipe {
+                NavigationLink {
+                    RecipeView(recipe)
+                } label: {
+                    Row {
+                        Text(leading)
+                    } trailing: {
+                        Text(recipe.name ?? "")
+                            .foregroundColor(.secondary)
+                    }
+                }
+            } else {
+                NavigationLink(leading) {
+                    RecipesView(selectedRecipe: $selectedRecipe, picker: true)
+                        .onChange(of: selectedRecipe, perform: didSelectRecipe)
                 }
             }
         }
@@ -60,8 +70,6 @@ struct PlanRow: View {
                 .tint(.red)
             }
         }
-        .onChange(of: selectedRecipe, perform: didSelectRecipe)
-        .buttonStyle(.borderless)
     }
     
     func didSelectRecipe(_ recipe: Recipe?) {
