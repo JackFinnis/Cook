@@ -36,19 +36,7 @@ struct RecipesView: View {
             ZStack {
                 List(selection: $selectedRecipe) {
                     ForEach(filteredRecipes) { recipe in
-                        Row {
-                            Text(recipe.name ?? "")
-                            if !editMode.isEditing && !picker {
-                                NavigationLink("") {
-                                    RecipeView(recipe)
-                                }
-                            }
-                        } trailing: {
-                            DeleteButton(editMode: editMode) {
-                                deleteRecipe(recipe)
-                            }
-                        }
-                        .tag(recipe)
+                        RecipeRow(recipe: recipe, editMode: editMode, picker: picker)
                     }
                     
                     if showNewRecipeField {
@@ -110,10 +98,5 @@ struct RecipesView: View {
         try? context.save()
         newRecipeName = ""
         focused = true
-    }
-    
-    func deleteRecipe(_ recipe: Recipe) {
-        context.delete(recipe)
-        try? context.save()
     }
 }

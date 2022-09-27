@@ -13,7 +13,7 @@ struct CookApp: App {
     
     var body: some Scene {
         WindowGroup {
-            Tabs()
+            RootView()
                 .environment(\.managedObjectContext, dataController.container.viewContext)
         }
     }

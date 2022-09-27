@@ -88,6 +88,7 @@ struct IngredientsView: View {
         }
         .onAppear {
             showNewIngredientField = ingredients.isNotEmpty
+            context.refreshAllObjects()
         }
         .onChange(of: editMode) { editMode in
             withAnimation {

@@ -28,6 +28,7 @@ struct ErrorLabel: View {
                     action()
                 }
             }
+            .font(.body)
             .buttonStyle(.borderedProminent)
         }
     }

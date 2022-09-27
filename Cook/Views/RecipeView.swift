@@ -12,6 +12,7 @@ struct RecipeView: View {
     @Environment(\.managedObjectContext) var context
     @Environment(\.dismiss) var dismiss
     @FocusState var focused: Bool
+    @State var showDeleteConfirmation = false
     @State var editMode = EditMode.inactive
     @State var showEditRecipeView = false
     @State var newIngredientName = ""
@@ -36,7 +37,7 @@ struct RecipeView: View {
         VStack {
             TextField("Name", text: $name)
                 .onChange(of: name, perform: saveName)
-                .font(.system(size: 34).weight(.bold))
+                .font(.system(size: 34).weight(name.isEmpty ? .regular : .bold))
                 .submitLabel(.done)
                 .padding(.horizontal)
             
@@ -68,15 +69,21 @@ struct RecipeView: View {
                         }
                     }
                 } header: {
-                    Row {
-                        Text("Ingredients")
-                    } trailing: {
-                        if sortedIngredients.isNotEmpty {
-                            EditButton(editMode: $editMode)
-                        }
-                    }
+                    Text(ingredients.formattedPlural("Ingredient"))
                 }
                 .headerProminence(.increased)
+                
+                if editMode.isEditing {
+                    Button("Delete") {
+                        showDeleteConfirmation = true
+                    }
+                    .horizontallyCentred()
+                    .foregroundColor(.red)
+                    .confirmationDialog("", isPresented: $showDeleteConfirmation, titleVisibility: .hidden) {
+                        Button("Delete", role: .destructive, action: deleteRecipe)
+                        Button("Cancel", role: .cancel) {}
+                    }
+                }
             }
         }
         .background(Color(.systemGroupedBackground))
@@ -85,8 +92,7 @@ struct RecipeView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
-                Button("Delete", action: deleteRecipe)
-                    .foregroundColor(.red)
+                EditButton(editMode: $editMode)
             }
         }
     }
@@ -129,6 +135,7 @@ struct RecipeView: View {
     func deleteRecipe() {
         context.delete(recipe)
         try? context.save()
+        Haptics.success()
         dismiss()
     }
 }

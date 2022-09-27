@@ -11,21 +11,12 @@ import CoreData
 struct PlanView: View {
     @Environment(\.managedObjectContext) var context
     @FetchRequest(sortDescriptors: []) var days: FetchedResults<Day>
-    @State var repeatEvery = Repeat(weeks: UserDefaults.standard.integer(forKey: "repeatEvery"))
-    @State var justSuppers = UserDefaults.standard.bool(forKey: "justSuppers")
     @State var editMode = EditMode.inactive
     
-    var filteredDays: [Day] {
-        days.filter { day in
-            day.date ?? .distantPast >= Date.now.startOfDay
-        }.sorted { one, two in
-            one.date ?? .now < two.date ?? .now
-        }
-    }
-    
-    var empty: Bool {
-        filteredDays.reduce(true) { $0 && (justSuppers ? true : $1.lunch == nil) && $1.supper == nil }
-    }
+    @Binding var justSuppers: Bool
+    @Binding var repeatEvery: Repeat
+    let filteredDays: [Day]
+    let empty: Bool
     
     var body: some View {
         NavigationView {

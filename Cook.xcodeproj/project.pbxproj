@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		04BA5E6F28E113080080EF20 /* CookApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA5E6E28E113080080EF20 /* CookApp.swift */; };
 		04BA5E7328E113090080EF20 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04BA5E7228E113090080EF20 /* Assets.xcassets */; };
-		04BA5E7D28E1133D0080EF20 /* Tabs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA5E7C28E1133D0080EF20 /* Tabs.swift */; };
+		04BA5E7D28E1133D0080EF20 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA5E7C28E1133D0080EF20 /* RootView.swift */; };
 		04BA5E8128E113C60080EF20 /* RecipesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA5E8028E113C60080EF20 /* RecipesView.swift */; };
 		04BA5E8528E115760080EF20 /* PlanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA5E8428E115760080EF20 /* PlanView.swift */; };
 		04BA5E8728E116F50080EF20 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BA5E8628E116F50080EF20 /* DataController.swift */; };
@@ -28,15 +28,15 @@
 		04C895B928E334CD00F94E01 /* DeleteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C895B828E334CD00F94E01 /* DeleteButton.swift */; };
 		04C895BB28E340C300F94E01 /* EditMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C895BA28E340C300F94E01 /* EditMode.swift */; };
 		04C895BD28E3779800F94E01 /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C895BC28E3779800F94E01 /* ListView.swift */; };
-		04C895BF28E38CE800F94E01 /* ListRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C895BE28E38CE800F94E01 /* ListRow.swift */; };
 		04C895C128E3916400F94E01 /* ErrorLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C895C028E3916400F94E01 /* ErrorLabel.swift */; };
+		04C895C328E3B05500F94E01 /* RecipeRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C895C228E3B05500F94E01 /* RecipeRow.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		04BA5E6B28E113080080EF20 /* Cook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cook.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		04BA5E6E28E113080080EF20 /* CookApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CookApp.swift; sourceTree = "<group>"; };
 		04BA5E7228E113090080EF20 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		04BA5E7C28E1133D0080EF20 /* Tabs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tabs.swift; sourceTree = "<group>"; };
+		04BA5E7C28E1133D0080EF20 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		04BA5E8028E113C60080EF20 /* RecipesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipesView.swift; sourceTree = "<group>"; };
 		04BA5E8428E115760080EF20 /* PlanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanView.swift; sourceTree = "<group>"; };
 		04BA5E8628E116F50080EF20 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
@@ -55,8 +55,8 @@
 		04C895B828E334CD00F94E01 /* DeleteButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteButton.swift; sourceTree = "<group>"; };
 		04C895BA28E340C300F94E01 /* EditMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditMode.swift; sourceTree = "<group>"; };
 		04C895BC28E3779800F94E01 /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
-		04C895BE28E38CE800F94E01 /* ListRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListRow.swift; sourceTree = "<group>"; };
 		04C895C028E3916400F94E01 /* ErrorLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorLabel.swift; sourceTree = "<group>"; };
+		04C895C228E3B05500F94E01 /* RecipeRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeRow.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,14 +102,14 @@
 		04BA5E9728E22C680080EF20 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				04BA5E7C28E1133D0080EF20 /* Tabs.swift */,
+				04BA5E7C28E1133D0080EF20 /* RootView.swift */,
 				04BA5E8428E115760080EF20 /* PlanView.swift */,
 				04BA5EAB28E2737A0080EF20 /* PlanRow.swift */,
 				04BA5E8028E113C60080EF20 /* RecipesView.swift */,
+				04C895C228E3B05500F94E01 /* RecipeRow.swift */,
 				04BA5E8D28E11AB70080EF20 /* RecipeView.swift */,
 				04BA5EA928E25FF20080EF20 /* IngredientsView.swift */,
 				04C895BC28E3779800F94E01 /* ListView.swift */,
-				04C895BE28E38CE800F94E01 /* ListRow.swift */,
 				04BA5EB528E3146D0080EF20 /* Extra */,
 			);
 			path = Views;
@@ -223,15 +223,15 @@
 				04BA5EAE28E275520080EF20 /* Meal.swift in Sources */,
 				04BA5EAC28E2737A0080EF20 /* PlanRow.swift in Sources */,
 				04BA5E8E28E11AB70080EF20 /* RecipeView.swift in Sources */,
-				04C895BF28E38CE800F94E01 /* ListRow.swift in Sources */,
 				04BA5E9428E11E4F0080EF20 /* Collection.swift in Sources */,
 				04BA5E8A28E1179A0080EF20 /* Model.xcdatamodeld in Sources */,
 				04BA5E8128E113C60080EF20 /* RecipesView.swift in Sources */,
 				04BA5EB228E27CA30080EF20 /* Repeat.swift in Sources */,
 				04BA5E9C28E233010080EF20 /* Date.swift in Sources */,
 				04BA5EAA28E25FF20080EF20 /* IngredientsView.swift in Sources */,
-				04BA5E7D28E1133D0080EF20 /* Tabs.swift in Sources */,
+				04BA5E7D28E1133D0080EF20 /* RootView.swift in Sources */,
 				04C895BD28E3779800F94E01 /* ListView.swift in Sources */,
+				04C895C328E3B05500F94E01 /* RecipeRow.swift in Sources */,
 				04BA5E8528E115760080EF20 /* PlanView.swift in Sources */,
 				04BA5E9028E11BCE0080EF20 /* View.swift in Sources */,
 				04C895B928E334CD00F94E01 /* DeleteButton.swift in Sources */,
@@ -371,6 +371,7 @@
 				DEVELOPMENT_TEAM = 4CQW4CFFYT;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Just Cook";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -402,6 +403,7 @@
 				DEVELOPMENT_TEAM = 4CQW4CFFYT;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Just Cook";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
