@@ -21,7 +21,7 @@ enum Speed: Int16, CaseIterable {
         case .slow:
             return "Slow"
         case .fast:
-            return "Quick"
+            return "Fast"
         }
     }
 }

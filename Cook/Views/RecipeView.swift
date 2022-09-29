@@ -21,6 +21,9 @@ struct RecipeView: View {
     @State var ingredients = Set<Ingredient>()
     @State var type = RecipeType.meal
     @State var speed = Speed.medium
+    @State var favourite = false
+    @State var scale: CGFloat = 1
+    @State var shake = false
     
     @ObservedObject var recipe: Recipe
     
@@ -32,7 +35,7 @@ struct RecipeView: View {
     
     var body: some View {
         ScrollViewReader { form in
-            VStack {
+            VStack(spacing: 0) {
                 VStack {
                     TextField("Name", text: $name)
                         .onChange(of: name, perform: saveName)
@@ -56,7 +59,7 @@ struct RecipeView: View {
                     .onChange(of: speed, perform: saveSpeed)
                     
                     Row {
-                        Text(ingredients.formattedPlural("Ingredient"))
+                        Text(ingredients.count.formattedPlural("Ingredient"))
                             .animation(.none, value: ingredients)
                             .font(.title2.weight(.semibold))
                     } trailing: {
@@ -64,7 +67,7 @@ struct RecipeView: View {
                             Button {
                                 withAnimation {
                                     focused = true
-                                    form.scrollTo("Add Ingredient")
+                                    form.scrollTo(0)
                                 }
                             } label: {
                                 Image(systemName: "plus")
@@ -73,41 +76,36 @@ struct RecipeView: View {
                         }
                     }
                     .padding(.top)
+                    .padding(.bottom, 5)
                 }
                 .padding(.horizontal)
                 
                 Form {
                     Section {
                         ForEach(sortedIngredients) { ingredient in
-                            Row {
-                                Text(ingredient.name ?? "")
-                            } trailing: {
-                                DeleteButton(editMode: editMode) {
-                                    removeIngredient(ingredient)
-                                }
-                            }
-                            .swipeActions {
-                                Button("Remove", role: .destructive) {
-                                    removeIngredient(ingredient)
-                                }
-                            }
+                            IngredientRow(ingredient: ingredient, selection: $ingredients, editMode: editMode)
                         }
                         
                         if !editMode.isEditing {
                             NavigationLink {
                                 IngredientsView(selection: $ingredients)
-                                    .navigationTitle(ingredients.formattedPlural("Ingredient"))
+                                    .navigationTitle(ingredients.count.formattedPlural("Ingredient"))
                             } label: {
-                                TextField("Add Ingredient", text: $newIngredientName)
-                                    .id("Add Ingredient")
-                                    .onSubmit(submitIngredient)
-                                    .focused($focused)
-                                    .submitLabel(.done)
-                                    .onChange(of: newIngredientName) { _ in
-                                        withAnimation {
-                                            form.scrollTo("Add Ingredient")
+                                Row {
+                                    TextField("Add Ingredient", text: $newIngredientName)
+                                        .id(0)
+                                        .onSubmit(submitIngredient)
+                                        .focused($focused)
+                                        .submitLabel(.done)
+                                        .onChange(of: newIngredientName) { _ in
+                                            withAnimation {
+                                                form.scrollTo("Add Ingredient")
+                                            }
                                         }
-                                    }
+                                } trailing: {
+                                    Text("Browse")
+                                        .foregroundColor(.accentColor)
+                                }
                             }
                         }
                     }
@@ -135,6 +133,8 @@ struct RecipeView: View {
         .onAppear {
             name = recipe.name ?? ""
             type = RecipeType(rawValue: recipe.type) ?? .meal
+            speed = Speed(rawValue: recipe.speed) ?? .medium
+            favourite = recipe.favourite
             ingredients = Set(recipe.ingredients?.allObjects as? [Ingredient] ?? [])
         }
         .task {
@@ -142,7 +142,36 @@ struct RecipeView: View {
         }
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
-                EditButton(editMode: $editMode)
+                HStack {
+                    Button {
+                        if favourite {
+                            favourite = false
+                        } else {
+                            shake = true
+                            withAnimation(.easeInOut(duration: 0.25)) {
+                                favourite = true
+                                scale = 1.3
+                            }
+                            withAnimation(.spring(response: 0.2, dampingFraction: 0.2, blendDuration: 0.2)) {
+                                shake = false
+                            }
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                                withAnimation(.easeInOut(duration: 0.25)) {
+                                    scale = 1
+                                }
+                            }
+                        }
+                    } label: {
+                        Image(systemName: favourite ? "star.fill" : "star")
+                            .foregroundColor(.yellow)
+                            .scaleEffect(scale)
+                            .rotationEffect(.degrees(shake ? 20 : 0))
+                    }
+                    .onChange(of: favourite, perform: saveFavourite)
+                    
+                    EditButton(editMode: $editMode)
+                }
+                .animation(.none, value: editMode)
             }
         }
     }
@@ -186,6 +215,11 @@ struct RecipeView: View {
     
     func saveSpeed(_ speed: Speed) {
         recipe.speed = speed.rawValue
+        try? context.save()
+    }
+    
+    func saveFavourite(_ favourite: Bool) {
+        recipe.favourite = favourite
         try? context.save()
     }
     

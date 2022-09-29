@@ -16,23 +16,24 @@ struct RecipesView: View {
     @State var newRecipeName = ""
     @State var showNewRecipeField = false
     @State var editMode = EditMode.inactive
-    @State var selecting = EditMode.inactive
     @State var selectedType: RecipeType?
     @State var selectedSpeed: Speed?
     @State var text = ""
+    @State var onlyShowFavourites = false
     
     @Binding var selectedRecipe: Recipe?
     let picker: Bool
     
     var filteredRecipes: [Recipe] {
         recipes.filter { recipe in
+            let favourite = onlyShowFavourites ? recipe.favourite : true
             let type = recipe.type == selectedType?.rawValue ?? recipe.type
             let speed = recipe.speed == selectedSpeed?.rawValue ?? recipe.speed
             let name = text.isEmpty || recipe.name?.localizedCaseInsensitiveContains(text) ?? false
             let ingredients = (recipe.ingredients?.allObjects as? [Ingredient] ?? []).reduce(false) { result, ingredient in
                 result || ingredient.name?.localizedCaseInsensitiveContains(text) ?? false
             }
-            return (ingredients || name) && type && speed
+            return (ingredients || name) && type && speed && favourite
         }.sorted { one, two in
             (one.lunches?.count ?? 0) + (one.suppers?.count ?? 0) >
             (two.lunches?.count ?? 0) + (two.suppers?.count ?? 0)
@@ -44,7 +45,7 @@ struct RecipesView: View {
             ZStack {
                 List(selection: $selectedRecipe) {
                     ForEach(filteredRecipes) { recipe in
-                        RecipeRow(recipe: recipe, editMode: editMode, picker: picker)
+                        RecipeRow(recipe: recipe, selectedRecipe: $selectedRecipe, editMode: editMode, picker: picker)
                     }
                     
                     if showNewRecipeField && !editMode.isEditing {
@@ -60,10 +61,18 @@ struct RecipesView: View {
                             }
                     }
                 }
-                .environment(\.editMode, $selecting)
+                .environment(\.editMode, .constant(picker ? .active : .inactive))
                 .animation(.default, value: filteredRecipes)
                 .navigationTitle("Recipes")
-                .searchable(text: $text.animation(), placement: .navigationBarDrawer, prompt: "Search Recipes, Ingredients")
+                .navigationBarTitleDisplayMode(.large)
+                .searchable(text: $text.animation(), placement: .navigationBarDrawer(displayMode: .always), prompt: "Search Recipes, Ingredients")
+                .overlay(alignment: .bottom) {
+                    Text(filteredRecipes.count.formattedPlural("recipe"))
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .animation(.none)
+                        .padding()
+                }
                 .toolbar {
                     ToolbarItem(placement: .primaryAction) {
                         HStack {
@@ -97,13 +106,7 @@ struct RecipesView: View {
             }
         }
         .onAppear {
-            selecting = picker ? .active : .inactive
             showNewRecipeField = recipes.isNotEmpty
-        }
-        .onChange(of: editMode) { editMode in
-            withAnimation {
-                selecting = picker && !editMode.isEditing ? .active : .inactive
-            }
         }
         .onChange(of: selectedRecipe) { _ in
             dismiss()
@@ -112,6 +115,10 @@ struct RecipesView: View {
     
     var filterMenu: some View {
         Menu {
+            Toggle(isOn: $onlyShowFavourites) {
+                Label("Filter favourites", systemImage: "star")
+            }
+            
             Picker("Recipe type", selection: $selectedType) {
                 Text("All types")
                     .tag(nil as RecipeType?)
@@ -130,7 +137,7 @@ struct RecipesView: View {
                 }
             }
         } label: {
-            Image(systemName: "line.3.horizontal.decrease.circle" + (selectedType == nil && selectedSpeed == nil ? "" : ".fill"))
+            Image(systemName: "line.3.horizontal.decrease.circle" + (!onlyShowFavourites && selectedType == nil && selectedSpeed == nil ? "" : ".fill"))
         }
     }
     

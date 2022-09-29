@@ -59,7 +59,7 @@ struct PlanRow: View {
                 }
             } else {
                 NavigationLink {
-                    RecipesView(selectedRecipe: $selectedRecipe, picker: true)
+                    RecipesView(selectedType: .meal, selectedRecipe: $selectedRecipe, picker: true)
                         .onChange(of: selectedRecipe, perform: didSelectRecipe)
                 } label: {
                     Row {
@@ -73,12 +73,21 @@ struct PlanRow: View {
                 }
             }
         }
-        .swipeActions {
+        .swipeActions(edge: .trailing) {
             if let recipe {
                 Button("Remove") {
                     removeRecipe(recipe)
                 }
                 .tint(.red)
+            }
+        }
+        .contextMenu {
+            if let recipe {
+                Button(role: .destructive) {
+                    removeRecipe(recipe)
+                } label: {
+                    Label("Remove recipe", systemImage: "minus.circle")
+                }
             }
         }
     }

@@ -28,8 +28,15 @@ struct ListView: View {
     var list: ShoppingList? { lists.first }
     
     var sortedIngredients: [Ingredient] {
-        ingredients.sorted { one, two in
+        ingredients.filter { ($0.name ?? "").isNotEmpty }
+            .sorted { one, two in
             one.name ?? "" < two.name ?? ""
+        }
+    }
+    
+    var filteredFavourites: [Ingredient] {
+        allIngredients.filter { ingredient in
+            !ingredients.contains(ingredient) && ingredient.favourite
         }
     }
     
@@ -46,7 +53,7 @@ struct ListView: View {
     
     var filteredIngredientsNeeded: [Ingredient] {
         ingredientsNeeded
-            .filter { !self.ingredients.contains($0) }
+            .filter { !ingredients.contains($0) }
             .sorted { one, two in
             one.name ?? "" < two.name ?? ""
         }
@@ -56,91 +63,101 @@ struct ListView: View {
         NavigationView {
             ScrollViewReader { list in
                 List(selection: $selectedIngredient) {
-                    Section {
-                        ForEach(sortedIngredients, id: \.self) { ingredient in
-                            Text(ingredient.name ?? "")
-                                .tag(ingredient)
-                        }
-                        
-                        TextField("Add Item", text: $newIngredientName)
-                            .id(0)
-                            .onSubmit(submitIngredient)
-                            .submitLabel(.done)
-                            .focused($focused)
-                            .onChange(of: newIngredientName) { _ in
-                                withAnimation {
-                                    list.scrollTo(0)
-                                }
-                            }
-                    } header: {
-                        Row {
-                            Text(ingredients.formattedPlural("Item"))
-                                .animation(.none, value: ingredients)
-                        } trailing: {
-                            Menu("Add Ingredients") {
-                                Button {
-                                    showRecipesView = true
-                                } label: {
-                                    Label("From recipe", systemImage: "book")
-                                }
-                                Button {
-                                    showIngredientsView = true
-                                } label: {
-                                    Label("Browse", systemImage: "magnifyingglass")
-                                }
-                            }
-                            .font(.body)
-                            .overlay {
-                                NavigationLink("", isActive: $showRecipesView) {
-                                    RecipesView(selectedRecipe: $selectedRecipe, picker: true)
-                                }
-                                .hidden()
-                                .onChange(of: selectedRecipe, perform: didSelectRecipe)
-                                
-                                NavigationLink("", isActive: $showIngredientsView) {
-                                    IngredientsView(selection: $ingredients)
-                                        .navigationTitle(ingredients.formattedPlural("Ingredient"))
-                                }
-                                .hidden()
-                            }
-                        }
+                    ForEach(sortedIngredients, id: \.self) { ingredient in
+                        IngredientRow(ingredient: ingredient, selection: $ingredients, editMode: .inactive)
                     }
-                    .headerProminence(.increased)
+                    
+                    TextField("Add Item", text: $newIngredientName)
+                        .id(0)
+                        .onSubmit(submitIngredient)
+                        .submitLabel(.done)
+                        .focused($focused)
+                        .onChange(of: newIngredientName) { _ in
+                            withAnimation {
+                                list.scrollTo(0)
+                            }
+                        }
                     
                     Section {
                         ForEach(filteredIngredientsNeeded) { ingredient in
-                            Text(ingredient.name ?? "")
-                                .tag(ingredient)
+                            IngredientRow(ingredient: ingredient, selection: $ingredients, editMode: .inactive)
                         }
                     } header: {
                         if ingredientsNeeded.isEmpty {
-                            ErrorLabel("Make a plan", systemName: "calendar") {
+                            Button("Make a plan") {
                                 selectedTab = 1
                             }
+                            .font(.body)
+                            .buttonStyle(.borderedProminent)
                             .horizontallyCentred()
+                            .padding(.leading)
                         } else {
-                            Text(filteredIngredientsNeeded.isEmpty ? "Ready for this week" : "Needed this week")
+                            Text(filteredIngredientsNeeded.isEmpty ? "All set for this week" : "Needed this week")
                                 .animation(.none)
                         }
                     }
                     .headerProminence(.increased)
+                    
+                    if filteredFavourites.isNotEmpty {
+                        Section("Favourites") {
+                            ForEach(filteredFavourites) { ingredient in
+                                IngredientRow(ingredient: ingredient, selection: $ingredients, editMode: .inactive)
+                            }
+                        }
+                        .headerProminence(.increased)
+                    }
                 }
+                .listStyle(.insetGrouped)
                 .environment(\.editMode, .constant(.active))
-                .animation(animate ? .default : .none, value: sortedIngredients)
-                .animation(animate ? .default : .none, value: filteredIngredientsNeeded)
+                .animation(animate ? .default : .none, value: ingredients)
                 .navigationTitle("Shopping List")
                 .onAppear(perform: updateList)
                 .onChange(of: selectedIngredient, perform: newSelectedIngredient)
                 .onChange(of: ingredients, perform: saveIngredients)
+                .overlay(alignment: .bottom) {
+                    Text(sortedIngredients.count.formattedPlural("item"))
+                        .animation(.none, value: ingredients)
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .padding()
+                }
                 .toolbar {
                     ToolbarItem(placement: .primaryAction) {
-                        Button {
-                            withAnimation {
-                                list.scrollTo(0)
-                                focused = true
+                        Menu {
+                            Button {
+                                withAnimation {
+                                    list.scrollTo(0)
+                                    focused = true
+                                }
+                            } label: {
+                                Label("Add an item", systemImage: "pencil")
+                            }
+                            Button {
+                                showRecipesView = true
+                            } label: {
+                                Label("From a recipe", systemImage: "book")
+                            }
+                            Button {
+                                showIngredientsView = true
+                            } label: {
+                                Label("Browse ingredients", systemImage: "magnifyingglass")
                             }
                         } label: {
                             Image(systemName: "plus")
+                        }
+                        .font(.body)
+                        .overlay {
+                            NavigationLink("", isActive: $showRecipesView) {
+                                RecipesView(selectedRecipe: $selectedRecipe, picker: true)
+                            }
+                            .hidden()
+                            .onChange(of: selectedRecipe, perform: didSelectRecipe)
+                            
+                            NavigationLink("", isActive: $showIngredientsView) {
+                                IngredientsView(selection: $ingredients)
+                                    .navigationTitle(sortedIngredients.count.formattedPlural("Ingredient"))
+                            }
+                            .hidden()
                         }
                     }
                 }
@@ -198,11 +215,11 @@ struct ListView: View {
     
     func updateList() {
         let list = list ?? ShoppingList(context: context)
+        try? context.save()
+        context.refreshAllObjects()
         if ingredients.isEmpty {
             ingredients = Set(list.ingredients?.allObjects as? [Ingredient] ?? [])
         }
-        context.refreshAllObjects()
         animate = true
-        try? context.save()
     }
 }

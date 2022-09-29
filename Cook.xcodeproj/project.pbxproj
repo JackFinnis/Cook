@@ -32,6 +32,10 @@
 		04C895C328E3B05500F94E01 /* RecipeRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C895C228E3B05500F94E01 /* RecipeRow.swift */; };
 		04C895C528E514E700F94E01 /* RecipeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C895C428E514E700F94E01 /* RecipeType.swift */; };
 		04C895C728E5178000F94E01 /* Speed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C895C628E5178000F94E01 /* Speed.swift */; };
+		04C895C928E59F5E00F94E01 /* AllDaysView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C895C828E59F5E00F94E01 /* AllDaysView.swift */; };
+		04C895CF28E5A27000F94E01 /* PlanList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C895CE28E5A27000F94E01 /* PlanList.swift */; };
+		04C895D328E5B8B200F94E01 /* IngredientRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C895D228E5B8B200F94E01 /* IngredientRow.swift */; };
+		04C895D528E5C2C700F94E01 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C895D428E5C2C700F94E01 /* String.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -61,6 +65,10 @@
 		04C895C228E3B05500F94E01 /* RecipeRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeRow.swift; sourceTree = "<group>"; };
 		04C895C428E514E700F94E01 /* RecipeType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeType.swift; sourceTree = "<group>"; };
 		04C895C628E5178000F94E01 /* Speed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Speed.swift; sourceTree = "<group>"; };
+		04C895C828E59F5E00F94E01 /* AllDaysView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllDaysView.swift; sourceTree = "<group>"; };
+		04C895CE28E5A27000F94E01 /* PlanList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanList.swift; sourceTree = "<group>"; };
+		04C895D228E5B8B200F94E01 /* IngredientRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientRow.swift; sourceTree = "<group>"; };
+		04C895D428E5C2C700F94E01 /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,11 +116,14 @@
 			children = (
 				04BA5E7C28E1133D0080EF20 /* RootView.swift */,
 				04BA5E8428E115760080EF20 /* PlanView.swift */,
+				04C895CE28E5A27000F94E01 /* PlanList.swift */,
 				04BA5EAB28E2737A0080EF20 /* PlanRow.swift */,
+				04C895C828E59F5E00F94E01 /* AllDaysView.swift */,
 				04BA5E8028E113C60080EF20 /* RecipesView.swift */,
 				04C895C228E3B05500F94E01 /* RecipeRow.swift */,
 				04BA5E8D28E11AB70080EF20 /* RecipeView.swift */,
 				04BA5EA928E25FF20080EF20 /* IngredientsView.swift */,
+				04C895D228E5B8B200F94E01 /* IngredientRow.swift */,
 				04C895BC28E3779800F94E01 /* ListView.swift */,
 				04BA5EB528E3146D0080EF20 /* Extra */,
 			);
@@ -125,6 +136,7 @@
 				04BA5E8F28E11BCE0080EF20 /* View.swift */,
 				04BA5E9B28E233010080EF20 /* Date.swift */,
 				04BA5E9328E11E4F0080EF20 /* Collection.swift */,
+				04C895D428E5C2C700F94E01 /* String.swift */,
 				04C895BA28E340C300F94E01 /* EditMode.swift */,
 			);
 			path = Extensions;
@@ -146,10 +158,10 @@
 		04BA5EB528E3146D0080EF20 /* Extra */ = {
 			isa = PBXGroup;
 			children = (
-				04C895B828E334CD00F94E01 /* DeleteButton.swift */,
-				04BA5EB328E3144A0080EF20 /* EditButton.swift */,
 				04BA5EAF28E275CB0080EF20 /* Row.swift */,
 				04C895C028E3916400F94E01 /* ErrorLabel.swift */,
+				04BA5EB328E3144A0080EF20 /* EditButton.swift */,
+				04C895B828E334CD00F94E01 /* DeleteButton.swift */,
 			);
 			path = Extra;
 			sourceTree = "<group>";
@@ -237,11 +249,15 @@
 				04BA5EAA28E25FF20080EF20 /* IngredientsView.swift in Sources */,
 				04BA5E7D28E1133D0080EF20 /* RootView.swift in Sources */,
 				04C895BD28E3779800F94E01 /* ListView.swift in Sources */,
+				04C895C928E59F5E00F94E01 /* AllDaysView.swift in Sources */,
 				04C895C328E3B05500F94E01 /* RecipeRow.swift in Sources */,
+				04C895CF28E5A27000F94E01 /* PlanList.swift in Sources */,
 				04C895C728E5178000F94E01 /* Speed.swift in Sources */,
+				04C895D528E5C2C700F94E01 /* String.swift in Sources */,
 				04BA5E8528E115760080EF20 /* PlanView.swift in Sources */,
 				04BA5E9028E11BCE0080EF20 /* View.swift in Sources */,
 				04C895B928E334CD00F94E01 /* DeleteButton.swift in Sources */,
+				04C895D328E5B8B200F94E01 /* IngredientRow.swift in Sources */,
 				04BA5EB428E3144A0080EF20 /* EditButton.swift in Sources */,
 				04BA5EB028E275CB0080EF20 /* Row.swift in Sources */,
 				04C895BB28E340C300F94E01 /* EditMode.swift in Sources */,

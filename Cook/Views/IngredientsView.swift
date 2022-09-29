@@ -8,21 +8,22 @@
 import SwiftUI
 
 struct IngredientsView: View {
-    @FetchRequest(sortDescriptors: []) var ingredients: FetchedResults<Ingredient>
     @Environment(\.managedObjectContext) var context
+    @FetchRequest(sortDescriptors: []) var ingredients: FetchedResults<Ingredient>
     @FocusState var focused: Bool
     @State var newIngredientName = ""
     @State var editMode = EditMode.inactive
-    @State var selecting = EditMode.active
     @State var showNewIngredientField = false
+    @State var onlyFavourites = false
     @State var text = ""
     
     @Binding var selection: Set<Ingredient>
     
     var filteredIngredients: [Ingredient] {
         ingredients.filter { ingredient in
-            guard text.isNotEmpty else { return true }
-            return ingredient.name?.localizedCaseInsensitiveContains(text) ?? false
+            let name = text.isEmpty || ingredient.name?.localizedCaseInsensitiveContains(text) ?? false
+            let favourite = onlyFavourites ? ingredient.favourite : true
+            return name && favourite
         }.sorted { one, two in
             one.recipes?.count ?? 0 > two.recipes?.count ?? 0
         }
@@ -33,16 +34,7 @@ struct IngredientsView: View {
             ZStack {
                 List(selection: $selection) {
                     ForEach(filteredIngredients) { ingredient in
-                        Row {
-                            Text(ingredient.name ?? "")
-                                .tag(ingredient)
-                        } trailing: {
-                            DeleteButton(editMode: editMode) {
-                                deleteIngredient(ingredient)
-                            }
-                            .buttonStyle(.borderless)
-                        }
-                        .tag(ingredient)
+                        IngredientRow(ingredient: ingredient, selection: $selection, editMode: editMode)
                     }
                     
                     if showNewIngredientField && !editMode.isEditing {
@@ -52,15 +44,13 @@ struct IngredientsView: View {
                             .focused($focused)
                             .submitLabel(.done)
                             .onChange(of: newIngredientName) { _ in
-                                withAnimation {
-                                    list.scrollTo(0)
-                                }
+                                list.scrollTo(0)
                             }
                     }
                 }
-                .environment(\.editMode, $selecting)
-                .navigationBarTitleDisplayMode(.inline)
-                .searchable(text: $text, placement: .navigationBarDrawer(displayMode: .always))
+                .environment(\.editMode, .constant(.active))
+                .navigationBarTitleDisplayMode(.large)
+                .searchable(text: $text.animation(), placement: .navigationBarDrawer(displayMode: .always))
                 .toolbar {
                     ToolbarItem(placement: .primaryAction) {
                         HStack {
@@ -74,6 +64,14 @@ struct IngredientsView: View {
                                 } label: {
                                     Image(systemName: "plus")
                                 }
+                            }
+                            Button {
+                                withAnimation {
+                                    onlyFavourites.toggle()
+                                }
+                            } label: {
+                                Image(systemName: onlyFavourites ? "star.fill" : "star")
+                                    .foregroundColor(.yellow)
                             }
                             if ingredients.isNotEmpty {
                                 EditButton(editMode: $editMode)
@@ -94,11 +92,6 @@ struct IngredientsView: View {
             showNewIngredientField = ingredients.isNotEmpty
             context.refreshAllObjects()
         }
-        .onChange(of: editMode) { editMode in
-            withAnimation {
-                selecting = editMode.isEditing ? .inactive : .active
-            }
-        }
     }
     
     func submitIngredient() {
@@ -114,10 +107,5 @@ struct IngredientsView: View {
             newIngredientName = ""
         }
         focused = true
-    }
-    
-    func deleteIngredient(_ ingredient: Ingredient) {
-        context.delete(ingredient)
-        try? context.save()
     }
 }

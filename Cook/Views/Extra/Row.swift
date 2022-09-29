@@ -14,7 +14,7 @@ struct Row<Leading: View, Trailing: View>: View {
     var body: some View {
         HStack {
             leading()
-            Spacer()
+            Spacer(minLength: 0)
             trailing()
         }
     }

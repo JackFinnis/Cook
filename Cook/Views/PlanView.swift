@@ -18,46 +18,36 @@ struct PlanView: View {
     let filteredDays: [Day]
     
     var nextDayToPlan: Day? {
-        for day in filteredDays where day.supper == nil {
+        for day in filteredDays where day.supper == nil || (justSuppers ? false : day.lunch == nil) {
             return day
         }
         return nil
     }
     
-    var empty: Bool {
-        filteredDays.reduce(true) { $0 && (justSuppers ? true : $1.lunch == nil) && $1.supper == nil }
+    var toPlan: Int {
+        filteredDays.reduce(0) { $0 + (justSuppers ? 0 : ($1.lunch == nil ? 1 : 0)) + ($1.supper == nil ? 1 : 0) }
     }
-    var complete: Bool {
-        filteredDays.reduce(true) { $0 && (justSuppers ? true : $1.lunch != nil) && $1.supper != nil }
+    var empty: Bool {
+        toPlan == (justSuppers ? 7 : 14)
     }
     
     var body: some View {
         NavigationView {
             List {
-                ForEach(filteredDays) { day in
-                    if justSuppers {
-                        PlanRow(day: day, meal: .supper, editMode: editMode, justSuppers: justSuppers, empty: empty, nextDayToPlan: nextDayToPlan)
-                    } else {
-                        Section {
-                            PlanRow(day: day, meal: .lunch, editMode: editMode, justSuppers: justSuppers, empty: empty, nextDayToPlan: nextDayToPlan)
-                            PlanRow(day: day, meal: .supper, editMode: editMode, justSuppers: justSuppers, empty: empty, nextDayToPlan: nextDayToPlan)
-                        } header: {
-                            Text(day.date?.formattedApple() ?? "")
-                        }
-                        .headerProminence(.increased)
-                    }
-                }
-                Section {} footer: {
-                    if complete {
-                        Text("🎉 Your week is planned!")
-                            .horizontallyCentred()
-                    }
-                }
+                PlanList(days: filteredDays, editMode: editMode, justSuppers: justSuppers, empty: empty, nextDayToPlan: nextDayToPlan)
             }
             .navigationTitle("Meal Plan")
             .onAppear(perform: updateDays)
             .onChange(of: repeatEvery, perform: updateRepeatEvery)
             .onChange(of: justSuppers, perform: updateJustSuppers)
+            .overlay(alignment: .bottom) {
+                Text(toPlan == 0 ? "🎉 Your week is planned!" : "\(toPlan.formattedPlural("meal")) to plan")
+                    .horizontallyCentred()
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                    .animation(.none)
+                    .padding()
+            }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     if !empty {
