@@ -23,13 +23,9 @@ struct RootView: View {
         }
     }
     
-    var empty: Bool {
-        filteredDays.reduce(true) { $0 && (justSuppers ? true : $1.lunch == nil) && $1.supper == nil }
-    }
-    
     var body: some View {
         TabView(selection: $selectedTab) {
-            PlanView(justSuppers: $justSuppers, repeatEvery: $repeatEvery, filteredDays: filteredDays, empty: empty)
+            PlanView(justSuppers: $justSuppers, repeatEvery: $repeatEvery, filteredDays: filteredDays)
                 .tag(1)
                 .tabItem {
                     Label("Meal Plan", systemImage: "calendar")

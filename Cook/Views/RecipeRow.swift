@@ -20,7 +20,7 @@ struct RecipeRow: View {
             Text(recipe.name ?? "")
             if !editMode.isEditing && !picker {
                 NavigationLink("") {
-                    RecipeView(recipe)
+                    RecipeView(recipe: recipe)
                 }
             }
         } trailing: {
@@ -35,7 +35,7 @@ struct RecipeRow: View {
             }
         }
         .confirmationDialog("", isPresented: $showDeleteConfirmation, titleVisibility: .hidden) {
-            Button("Delete", role: .destructive, action: deleteRecipe)
+            Button("Delete Recipe", role: .destructive, action: deleteRecipe)
             Button("Cancel", role: .cancel) {}
         }
     }
@@ -43,5 +43,6 @@ struct RecipeRow: View {
     func deleteRecipe() {
         context.delete(recipe)
         try? context.save()
+        Haptics.success()
     }
 }

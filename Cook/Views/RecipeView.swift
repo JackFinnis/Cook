@@ -16,16 +16,13 @@ struct RecipeView: View {
     @State var editMode = EditMode.inactive
     @State var showEditRecipeView = false
     @State var newIngredientName = ""
-    @State var name: String
-    @State var ingredients: Set<Ingredient>
+    @State var name = ""
+    @State var animate = false
+    @State var ingredients = Set<Ingredient>()
+    @State var type = RecipeType.meal
+    @State var speed = Speed.medium
     
     @ObservedObject var recipe: Recipe
-    
-    init(_ recipe: Recipe) {
-        self.recipe = recipe
-        _name = State(initialValue: recipe.name ?? "")
-        _ingredients = State(initialValue: Set(recipe.ingredients?.allObjects as? [Ingredient] ?? []))
-    }
     
     var sortedIngredients: [Ingredient] {
         ingredients.sorted { one, two in
@@ -34,62 +31,115 @@ struct RecipeView: View {
     }
     
     var body: some View {
-        VStack {
-            TextField("Name", text: $name)
-                .onChange(of: name, perform: saveName)
-                .font(.system(size: 34).weight(name.isEmpty ? .regular : .bold))
-                .submitLabel(.done)
-                .padding(.horizontal)
-            
-            Form {
-                Section {
-                    ForEach(sortedIngredients) { ingredient in
-                        Row {
-                            Text(ingredient.name ?? "")
-                        } trailing: {
-                            DeleteButton(editMode: editMode) {
-                                removeIngredient(ingredient)
+        ScrollViewReader { form in
+            VStack {
+                VStack {
+                    TextField("Name", text: $name)
+                        .onChange(of: name, perform: saveName)
+                        .font(.system(size: 34).weight(name.isEmpty ? .regular : .bold))
+                        .submitLabel(.done)
+                    
+                    Picker("Recipe Type", selection: $type) {
+                        ForEach(RecipeType.allCases, id: \.self) { type in
+                            Text(type.name)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    .onChange(of: type, perform: saveType)
+                    
+                    Picker("Recipe Speed", selection: $speed) {
+                        ForEach(Speed.sorted, id: \.self) { speed in
+                            Text(speed.name)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    .onChange(of: speed, perform: saveSpeed)
+                    
+                    Row {
+                        Text(ingredients.formattedPlural("Ingredient"))
+                            .animation(.none, value: ingredients)
+                            .font(.title2.weight(.semibold))
+                    } trailing: {
+                        if !editMode.isEditing {
+                            Button {
+                                withAnimation {
+                                    focused = true
+                                    form.scrollTo("Add Ingredient")
+                                }
+                            } label: {
+                                Image(systemName: "plus")
+                                    .font(.title2)
                             }
                         }
-                        .swipeActions {
-                            Button("Remove", role: .destructive) {
-                                removeIngredient(ingredient)
+                    }
+                    .padding(.top)
+                }
+                .padding(.horizontal)
+                
+                Form {
+                    Section {
+                        ForEach(sortedIngredients) { ingredient in
+                            Row {
+                                Text(ingredient.name ?? "")
+                            } trailing: {
+                                DeleteButton(editMode: editMode) {
+                                    removeIngredient(ingredient)
+                                }
+                            }
+                            .swipeActions {
+                                Button("Remove", role: .destructive) {
+                                    removeIngredient(ingredient)
+                                }
+                            }
+                        }
+                        
+                        if !editMode.isEditing {
+                            NavigationLink {
+                                IngredientsView(selection: $ingredients)
+                                    .navigationTitle(ingredients.formattedPlural("Ingredient"))
+                            } label: {
+                                TextField("Add Ingredient", text: $newIngredientName)
+                                    .id("Add Ingredient")
+                                    .onSubmit(submitIngredient)
+                                    .focused($focused)
+                                    .submitLabel(.done)
+                                    .onChange(of: newIngredientName) { _ in
+                                        withAnimation {
+                                            form.scrollTo("Add Ingredient")
+                                        }
+                                    }
                             }
                         }
                     }
                     
-                    if !editMode.isEditing {
-                        NavigationLink {
-                            IngredientsView(selection: $ingredients)
-                        } label: {
-                            TextField("Add Ingredient", text: $newIngredientName)
-                                .onSubmit(submitIngredient)
-                                .focused($focused)
-                                .submitLabel(.done)
+                    if editMode.isEditing {
+                        Section {
+                            Button("Delete") {
+                                showDeleteConfirmation = true
+                            }
+                            .horizontallyCentred()
+                            .foregroundColor(.red)
+                            .confirmationDialog("", isPresented: $showDeleteConfirmation, titleVisibility: .hidden) {
+                                Button("Delete Recipe", role: .destructive, action: deleteRecipe)
+                                Button("Cancel", role: .cancel) {}
+                            }
                         }
-                    }
-                } header: {
-                    Text(ingredients.formattedPlural("Ingredient"))
-                }
-                .headerProminence(.increased)
-                
-                if editMode.isEditing {
-                    Button("Delete") {
-                        showDeleteConfirmation = true
-                    }
-                    .horizontallyCentred()
-                    .foregroundColor(.red)
-                    .confirmationDialog("", isPresented: $showDeleteConfirmation, titleVisibility: .hidden) {
-                        Button("Delete", role: .destructive, action: deleteRecipe)
-                        Button("Cancel", role: .cancel) {}
                     }
                 }
             }
         }
         .background(Color(.systemGroupedBackground))
         .onChange(of: ingredients, perform: saveIngredients)
-        .animation(.default, value: sortedIngredients)
+        .animation(animate ? .default : .none, value: sortedIngredients)
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            name = recipe.name ?? ""
+            type = RecipeType(rawValue: recipe.type) ?? .meal
+            ingredients = Set(recipe.ingredients?.allObjects as? [Ingredient] ?? [])
+        }
+        .task {
+            animate = true
+        }
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 EditButton(editMode: $editMode)
@@ -124,10 +174,21 @@ struct RecipeView: View {
     }
     
     func saveName(_ name: String) {
+        guard name.isNotEmpty else { return }
         recipe.name = name
         try? context.save()
     }
-
+    
+    func saveType(_ type: RecipeType) {
+        recipe.type = type.rawValue
+        try? context.save()
+    }
+    
+    func saveSpeed(_ speed: Speed) {
+        recipe.speed = speed.rawValue
+        try? context.save()
+    }
+    
     func removeIngredient(_ ingredient: Ingredient) {
         ingredients.remove(ingredient)
     }
@@ -135,7 +196,7 @@ struct RecipeView: View {
     func deleteRecipe() {
         context.delete(recipe)
         try? context.save()
-        Haptics.tap()
+        Haptics.success()
         dismiss()
     }
 }

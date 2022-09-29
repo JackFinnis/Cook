@@ -10,11 +10,11 @@ import SwiftUI
 struct IngredientsView: View {
     @FetchRequest(sortDescriptors: []) var ingredients: FetchedResults<Ingredient>
     @Environment(\.managedObjectContext) var context
+    @FocusState var focused: Bool
     @State var newIngredientName = ""
     @State var editMode = EditMode.inactive
     @State var selecting = EditMode.active
     @State var showNewIngredientField = false
-    @FocusState var focused: Bool
     @State var text = ""
     
     @Binding var selection: Set<Ingredient>
@@ -45,18 +45,22 @@ struct IngredientsView: View {
                         .tag(ingredient)
                     }
                     
-                    if showNewIngredientField {
+                    if showNewIngredientField && !editMode.isEditing {
                         TextField("New Ingredient", text: $newIngredientName)
-                            .id("New Ingredient")
+                            .id(0)
                             .onSubmit(submitIngredient)
                             .focused($focused)
                             .submitLabel(.done)
+                            .onChange(of: newIngredientName) { _ in
+                                withAnimation {
+                                    list.scrollTo(0)
+                                }
+                            }
                     }
                 }
                 .environment(\.editMode, $selecting)
-                .navigationBarTitleDisplayMode(.large)
-                .navigationTitle("Ingredients")
-                .searchable(text: $text, placement: .navigationBarDrawer)
+                .navigationBarTitleDisplayMode(.inline)
+                .searchable(text: $text, placement: .navigationBarDrawer(displayMode: .always))
                 .toolbar {
                     ToolbarItem(placement: .primaryAction) {
                         HStack {
@@ -64,7 +68,7 @@ struct IngredientsView: View {
                                 Button {
                                     withAnimation {
                                         showNewIngredientField = true
-                                        list.scrollTo("New Ingredient")
+                                        list.scrollTo(0)
                                         focused = true
                                     }
                                 } label: {

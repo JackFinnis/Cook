@@ -12,16 +12,20 @@ struct ListView: View {
     @FetchRequest(sortDescriptors: []) var allIngredients: FetchedResults<Ingredient>
     @FetchRequest(sortDescriptors: []) var lists: FetchedResults<ShoppingList>
     @FetchRequest(sortDescriptors: []) var days: FetchedResults<Day>
+    @FocusState var focused: Bool
     @State var ingredients = Set<Ingredient>()
     @State var selectedIngredient: Ingredient?
     @State var newIngredientName = ""
     @State var animate = false
-    @FocusState var focused: Bool
-    var list: ShoppingList? { lists.first }
+    @State var showRecipesView = false
+    @State var showIngredientsView = false
+    @State var selectedRecipe: Recipe?
     
     @Binding var selectedTab: Int
     let filteredDays: [Day]
     let justSuppers: Bool
+    
+    var list: ShoppingList? { lists.first }
     
     var sortedIngredients: [Ingredient] {
         ingredients.sorted { one, two in
@@ -37,7 +41,11 @@ struct ListView: View {
                 ingredients.append(contentsOf: day.lunch?.ingredients?.allObjects as? [Ingredient] ?? [])
             }
         }
-        return Set(ingredients)
+        return Array(Set(ingredients))
+    }
+    
+    var filteredIngredientsNeeded: [Ingredient] {
+        ingredientsNeeded
             .filter { !self.ingredients.contains($0) }
             .sorted { one, two in
             one.name ?? "" < two.name ?? ""
@@ -54,25 +62,53 @@ struct ListView: View {
                                 .tag(ingredient)
                         }
                         
-                        TextField("Add Items", text: $newIngredientName)
+                        TextField("Add Item", text: $newIngredientName)
+                            .id(0)
                             .onSubmit(submitIngredient)
                             .submitLabel(.done)
                             .focused($focused)
+                            .onChange(of: newIngredientName) { _ in
+                                withAnimation {
+                                    list.scrollTo(0)
+                                }
+                            }
                     } header: {
                         Row {
                             Text(ingredients.formattedPlural("Item"))
                                 .animation(.none, value: ingredients)
                         } trailing: {
-                            NavigationLink("Find") {
-                                IngredientsView(selection: $ingredients)
+                            Menu("Add Ingredients") {
+                                Button {
+                                    showRecipesView = true
+                                } label: {
+                                    Label("From recipe", systemImage: "book")
+                                }
+                                Button {
+                                    showIngredientsView = true
+                                } label: {
+                                    Label("Browse", systemImage: "magnifyingglass")
+                                }
                             }
                             .font(.body)
+                            .overlay {
+                                NavigationLink("", isActive: $showRecipesView) {
+                                    RecipesView(selectedRecipe: $selectedRecipe, picker: true)
+                                }
+                                .hidden()
+                                .onChange(of: selectedRecipe, perform: didSelectRecipe)
+                                
+                                NavigationLink("", isActive: $showIngredientsView) {
+                                    IngredientsView(selection: $ingredients)
+                                        .navigationTitle(ingredients.formattedPlural("Ingredient"))
+                                }
+                                .hidden()
+                            }
                         }
                     }
                     .headerProminence(.increased)
                     
                     Section {
-                        ForEach(ingredientsNeeded) { ingredient in
+                        ForEach(filteredIngredientsNeeded) { ingredient in
                             Text(ingredient.name ?? "")
                                 .tag(ingredient)
                         }
@@ -83,14 +119,15 @@ struct ListView: View {
                             }
                             .horizontallyCentred()
                         } else {
-                            Text("Needed this week")
+                            Text(filteredIngredientsNeeded.isEmpty ? "Ready for this week" : "Needed this week")
+                                .animation(.none)
                         }
                     }
                     .headerProminence(.increased)
                 }
                 .environment(\.editMode, .constant(.active))
                 .animation(animate ? .default : .none, value: sortedIngredients)
-                .animation(animate ? .default : .none, value: ingredientsNeeded)
+                .animation(animate ? .default : .none, value: filteredIngredientsNeeded)
                 .navigationTitle("Shopping List")
                 .onAppear(perform: updateList)
                 .onChange(of: selectedIngredient, perform: newSelectedIngredient)
@@ -99,7 +136,7 @@ struct ListView: View {
                     ToolbarItem(placement: .primaryAction) {
                         Button {
                             withAnimation {
-                                list.scrollTo("Add Item")
+                                list.scrollTo(0)
                                 focused = true
                             }
                         } label: {
@@ -127,6 +164,16 @@ struct ListView: View {
         ingredients.insert(newIngredient)
         newIngredientName = ""
         focused = true
+    }
+    
+    func didSelectRecipe(_ recipe: Recipe?) {
+        if let recipe {
+            for ingredient in recipe.ingredients?.allObjects as? [Ingredient] ?? [] {
+                ingredients.insert(ingredient)
+            }
+            selectedRecipe = nil
+            Haptics.tap()
+        }
     }
     
     func saveIngredients(ingredients: Set<Ingredient>) {

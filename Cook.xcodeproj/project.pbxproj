@@ -30,6 +30,8 @@
 		04C895BD28E3779800F94E01 /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C895BC28E3779800F94E01 /* ListView.swift */; };
 		04C895C128E3916400F94E01 /* ErrorLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C895C028E3916400F94E01 /* ErrorLabel.swift */; };
 		04C895C328E3B05500F94E01 /* RecipeRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C895C228E3B05500F94E01 /* RecipeRow.swift */; };
+		04C895C528E514E700F94E01 /* RecipeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C895C428E514E700F94E01 /* RecipeType.swift */; };
+		04C895C728E5178000F94E01 /* Speed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C895C628E5178000F94E01 /* Speed.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -57,6 +59,8 @@
 		04C895BC28E3779800F94E01 /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
 		04C895C028E3916400F94E01 /* ErrorLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorLabel.swift; sourceTree = "<group>"; };
 		04C895C228E3B05500F94E01 /* RecipeRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeRow.swift; sourceTree = "<group>"; };
+		04C895C428E514E700F94E01 /* RecipeType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeType.swift; sourceTree = "<group>"; };
+		04C895C628E5178000F94E01 /* Speed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Speed.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -133,6 +137,8 @@
 				04BA5E9128E11C630080EF20 /* Haptics.swift */,
 				04BA5EAD28E275520080EF20 /* Meal.swift */,
 				04BA5EB128E27CA30080EF20 /* Repeat.swift */,
+				04C895C628E5178000F94E01 /* Speed.swift */,
+				04C895C428E514E700F94E01 /* RecipeType.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -232,12 +238,14 @@
 				04BA5E7D28E1133D0080EF20 /* RootView.swift in Sources */,
 				04C895BD28E3779800F94E01 /* ListView.swift in Sources */,
 				04C895C328E3B05500F94E01 /* RecipeRow.swift in Sources */,
+				04C895C728E5178000F94E01 /* Speed.swift in Sources */,
 				04BA5E8528E115760080EF20 /* PlanView.swift in Sources */,
 				04BA5E9028E11BCE0080EF20 /* View.swift in Sources */,
 				04C895B928E334CD00F94E01 /* DeleteButton.swift in Sources */,
 				04BA5EB428E3144A0080EF20 /* EditButton.swift in Sources */,
 				04BA5EB028E275CB0080EF20 /* Row.swift in Sources */,
 				04C895BB28E340C300F94E01 /* EditMode.swift in Sources */,
+				04C895C528E514E700F94E01 /* RecipeType.swift in Sources */,
 				04BA5E8728E116F50080EF20 /* DataController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -16,22 +16,41 @@ struct PlanView: View {
     @Binding var justSuppers: Bool
     @Binding var repeatEvery: Repeat
     let filteredDays: [Day]
-    let empty: Bool
+    
+    var nextDayToPlan: Day? {
+        for day in filteredDays where day.supper == nil {
+            return day
+        }
+        return nil
+    }
+    
+    var empty: Bool {
+        filteredDays.reduce(true) { $0 && (justSuppers ? true : $1.lunch == nil) && $1.supper == nil }
+    }
+    var complete: Bool {
+        filteredDays.reduce(true) { $0 && (justSuppers ? true : $1.lunch != nil) && $1.supper != nil }
+    }
     
     var body: some View {
         NavigationView {
             List {
                 ForEach(filteredDays) { day in
                     if justSuppers {
-                        PlanRow(day: day, meal: .supper, editMode: editMode, justSuppers: justSuppers)
+                        PlanRow(day: day, meal: .supper, editMode: editMode, justSuppers: justSuppers, empty: empty, nextDayToPlan: nextDayToPlan)
                     } else {
                         Section {
-                            PlanRow(day: day, meal: .lunch, editMode: editMode, justSuppers: justSuppers)
-                            PlanRow(day: day, meal: .supper, editMode: editMode, justSuppers: justSuppers)
+                            PlanRow(day: day, meal: .lunch, editMode: editMode, justSuppers: justSuppers, empty: empty, nextDayToPlan: nextDayToPlan)
+                            PlanRow(day: day, meal: .supper, editMode: editMode, justSuppers: justSuppers, empty: empty, nextDayToPlan: nextDayToPlan)
                         } header: {
                             Text(day.date?.formattedApple() ?? "")
                         }
                         .headerProminence(.increased)
+                    }
+                }
+                Section {} footer: {
+                    if complete {
+                        Text("🎉 Your week is planned!")
+                            .horizontallyCentred()
                     }
                 }
             }

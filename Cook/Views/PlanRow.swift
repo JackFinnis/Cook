@@ -15,6 +15,8 @@ struct PlanRow: View {
     let meal: Meal
     let editMode: EditMode
     let justSuppers: Bool
+    let empty: Bool
+    let nextDayToPlan: Day?
     
     var recipe: Recipe? {
         switch meal {
@@ -46,7 +48,7 @@ struct PlanRow: View {
                 }
             } else if let recipe {
                 NavigationLink {
-                    RecipeView(recipe)
+                    RecipeView(recipe: recipe)
                 } label: {
                     Row {
                         Text(leading)
@@ -56,9 +58,18 @@ struct PlanRow: View {
                     }
                 }
             } else {
-                NavigationLink(leading) {
+                NavigationLink {
                     RecipesView(selectedRecipe: $selectedRecipe, picker: true)
                         .onChange(of: selectedRecipe, perform: didSelectRecipe)
+                } label: {
+                    Row {
+                        Text(leading)
+                    } trailing: {
+                        if day == nextDayToPlan {
+                            Text("Select a meal")
+                                .foregroundColor(.accentColor)
+                        }
+                    }
                 }
             }
         }
