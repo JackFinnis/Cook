@@ -90,9 +90,8 @@ struct ListView: View {
                             .font(.body)
                             .buttonStyle(.borderedProminent)
                             .horizontallyCentred()
-                            .padding(.leading)
                         } else {
-                            Text(filteredIngredientsNeeded.isEmpty ? "All set for this week" : "Needed this week")
+                            Text(filteredIngredientsNeeded.isEmpty ? "Ready for this week" : "Needed this week")
                                 .animation(.none)
                         }
                     }
@@ -119,7 +118,7 @@ struct ListView: View {
                         .animation(.none, value: ingredients)
                         .font(.subheadline)
                         .foregroundColor(.secondary)
-                        .padding()
+                        .padding(10)
                 }
                 .toolbar {
                     ToolbarItem(placement: .primaryAction) {
@@ -155,7 +154,6 @@ struct ListView: View {
                             
                             NavigationLink("", isActive: $showIngredientsView) {
                                 IngredientsView(selection: $ingredients)
-                                    .navigationTitle(sortedIngredients.count.formattedPlural("Ingredient"))
                             }
                             .hidden()
                         }

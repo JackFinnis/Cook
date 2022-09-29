@@ -66,8 +66,10 @@ struct PlanRow: View {
                         Text(leading)
                     } trailing: {
                         if day == nextDayToPlan {
-                            Text("Select a meal")
-                                .foregroundColor(.accentColor)
+                            if meal == .lunch || justSuppers || !justSuppers && day.lunch != nil {
+                                Text("Select a meal")
+                                    .foregroundColor(.accentColor)
+                            }
                         }
                     }
                 }

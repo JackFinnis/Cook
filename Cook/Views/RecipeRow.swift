@@ -30,10 +30,9 @@ struct RecipeRow: View {
                         }
                     }
                 }
-                .transition(.move(edge: .leading).combined(with: .opacity))
             }
         } trailing: {
-            if editMode.isEditing || picker {
+            if editMode.isEditing {
                 Button {
                     toggleFavourite()
                 } label: {
@@ -42,7 +41,11 @@ struct RecipeRow: View {
                 }
                 .padding(.trailing, editMode.isEditing ? 10 : 0)
                 .transition(.move(edge: .trailing).combined(with: .opacity))
+            } else if picker && recipe.favourite {
+                Image(systemName: "star.fill")
+                    .foregroundColor(.yellow)
             }
+            
             DeleteButton(editMode: editMode) {
                 showDeleteConfirmation = true
             }

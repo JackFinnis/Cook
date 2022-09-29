@@ -21,21 +21,17 @@ struct IngredientRow: View {
             Text(ingredient.name ?? "")
                 .tag(ingredient)
         } trailing: {
-            if editMode.isEditing {
-                Button {
-                    toggleFavourite()
-                } label: {
-                    Image(systemName: ingredient.favourite ? "star.fill" : "star")
-                        .foregroundColor(.yellow)
-                }
-                .padding(.trailing, editMode.isEditing ? 10 : 0)
-                .transition(.move(edge: .trailing).combined(with: .opacity))
-            } else if ingredient.favourite {
-                Image(systemName: "star.fill")
+            if editMode.isEditing || ingredient.favourite {
+                Image(systemName: ingredient.favourite ? "star.fill" : "star")
                     .foregroundColor(.yellow)
-                    .transition(.move(edge: .leading).combined(with: .opacity))
+                    .padding(.trailing, editMode.isEditing ? 10 : 0)
+                    .transition(.move(edge: .trailing).combined(with: .opacity))
+                    .onTapGesture {
+                        if editMode.isEditing {
+                            toggleFavourite()
+                        }
+                    }
             }
-            
             DeleteButton(editMode: editMode) {
                 deleteIngredient()
             }

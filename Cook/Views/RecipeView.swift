@@ -89,7 +89,6 @@ struct RecipeView: View {
                         if !editMode.isEditing {
                             NavigationLink {
                                 IngredientsView(selection: $ingredients)
-                                    .navigationTitle(ingredients.count.formattedPlural("Ingredient"))
                             } label: {
                                 Row {
                                     TextField("Add Ingredient", text: $newIngredientName)

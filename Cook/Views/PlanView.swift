@@ -46,7 +46,7 @@ struct PlanView: View {
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                     .animation(.none)
-                    .padding()
+                    .padding(10)
             }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

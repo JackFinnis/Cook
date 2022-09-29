@@ -19,6 +19,9 @@ struct IngredientsView: View {
     
     @Binding var selection: Set<Ingredient>
     
+    var someFavourites: Bool {
+        ingredients.reduce(false) { $0 || $1.favourite }
+    }
     var filteredIngredients: [Ingredient] {
         ingredients.filter { ingredient in
             let name = text.isEmpty || ingredient.name?.localizedCaseInsensitiveContains(text) ?? false
@@ -48,9 +51,17 @@ struct IngredientsView: View {
                             }
                     }
                 }
+                .navigationTitle("Ingredients")
                 .environment(\.editMode, .constant(.active))
                 .navigationBarTitleDisplayMode(.large)
                 .searchable(text: $text.animation(), placement: .navigationBarDrawer(displayMode: .always))
+                .overlay(alignment: .bottom) {
+                    Text(filteredIngredients.count.formattedPlural("ingredient") + ((onlyFavourites || text.isNotEmpty) ? " found" : ""))
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .animation(.none)
+                        .padding(10)
+                }
                 .toolbar {
                     ToolbarItem(placement: .primaryAction) {
                         HStack {
@@ -65,13 +76,15 @@ struct IngredientsView: View {
                                     Image(systemName: "plus")
                                 }
                             }
-                            Button {
-                                withAnimation {
-                                    onlyFavourites.toggle()
+                            if someFavourites {
+                                Button {
+                                    withAnimation {
+                                        onlyFavourites.toggle()
+                                    }
+                                } label: {
+                                    Image(systemName: onlyFavourites ? "star.fill" : "star")
+                                        .foregroundColor(.yellow)
                                 }
-                            } label: {
-                                Image(systemName: onlyFavourites ? "star.fill" : "star")
-                                    .foregroundColor(.yellow)
                             }
                             if ingredients.isNotEmpty {
                                 EditButton(editMode: $editMode)

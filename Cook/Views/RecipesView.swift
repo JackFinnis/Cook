@@ -24,6 +24,12 @@ struct RecipesView: View {
     @Binding var selectedRecipe: Recipe?
     let picker: Bool
     
+    var someFavourites: Bool {
+        recipes.reduce(false) { $0 || $1.favourite }
+    }
+    var noActiveFilters: Bool {
+        !onlyShowFavourites && selectedType == nil && selectedSpeed == nil
+    }
     var filteredRecipes: [Recipe] {
         recipes.filter { recipe in
             let favourite = onlyShowFavourites ? recipe.favourite : true
@@ -67,11 +73,11 @@ struct RecipesView: View {
                 .navigationBarTitleDisplayMode(.large)
                 .searchable(text: $text.animation(), placement: .navigationBarDrawer(displayMode: .always), prompt: "Search Recipes, Ingredients")
                 .overlay(alignment: .bottom) {
-                    Text(filteredRecipes.count.formattedPlural("recipe"))
+                    Text(filteredRecipes.count.formattedPlural("recipe") + ((noActiveFilters && text.isEmpty) ? "" : " found"))
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                         .animation(.none)
-                        .padding()
+                        .padding(10)
                 }
                 .toolbar {
                     ToolbarItem(placement: .primaryAction) {
@@ -115,8 +121,10 @@ struct RecipesView: View {
     
     var filterMenu: some View {
         Menu {
-            Toggle(isOn: $onlyShowFavourites) {
-                Label("Filter favourites", systemImage: "star")
+            if someFavourites {
+                Toggle(isOn: $onlyShowFavourites) {
+                    Label("Filter favourites", systemImage: "star")
+                }
             }
             
             Picker("Recipe type", selection: $selectedType) {
@@ -137,7 +145,7 @@ struct RecipesView: View {
                 }
             }
         } label: {
-            Image(systemName: "line.3.horizontal.decrease.circle" + (!onlyShowFavourites && selectedType == nil && selectedSpeed == nil ? "" : ".fill"))
+            Image(systemName: "line.3.horizontal.decrease.circle" + (noActiveFilters ? "" : ".fill"))
         }
     }
     

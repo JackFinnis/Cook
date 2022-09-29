@@ -36,6 +36,7 @@
 		04C895CF28E5A27000F94E01 /* PlanList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C895CE28E5A27000F94E01 /* PlanList.swift */; };
 		04C895D328E5B8B200F94E01 /* IngredientRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C895D228E5B8B200F94E01 /* IngredientRow.swift */; };
 		04C895D528E5C2C700F94E01 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C895D428E5C2C700F94E01 /* String.swift */; };
+		04C895DF28E65DF700F94E01 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C895DA28E65CFC00F94E01 /* WelcomeView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -69,6 +70,7 @@
 		04C895CE28E5A27000F94E01 /* PlanList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanList.swift; sourceTree = "<group>"; };
 		04C895D228E5B8B200F94E01 /* IngredientRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientRow.swift; sourceTree = "<group>"; };
 		04C895D428E5C2C700F94E01 /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
+		04C895DA28E65CFC00F94E01 /* WelcomeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +117,7 @@
 			isa = PBXGroup;
 			children = (
 				04BA5E7C28E1133D0080EF20 /* RootView.swift */,
+				04C895DA28E65CFC00F94E01 /* WelcomeView.swift */,
 				04BA5E8428E115760080EF20 /* PlanView.swift */,
 				04C895CE28E5A27000F94E01 /* PlanList.swift */,
 				04BA5EAB28E2737A0080EF20 /* PlanRow.swift */,
@@ -249,6 +252,7 @@
 				04BA5EAA28E25FF20080EF20 /* IngredientsView.swift in Sources */,
 				04BA5E7D28E1133D0080EF20 /* RootView.swift in Sources */,
 				04C895BD28E3779800F94E01 /* ListView.swift in Sources */,
+				04C895DF28E65DF700F94E01 /* WelcomeView.swift in Sources */,
 				04C895C928E59F5E00F94E01 /* AllDaysView.swift in Sources */,
 				04C895C328E3B05500F94E01 /* RecipeRow.swift in Sources */,
 				04C895CF28E5A27000F94E01 /* PlanList.swift in Sources */,

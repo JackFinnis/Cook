@@ -14,6 +14,7 @@ struct RootView: View {
     @State var justSuppers = UserDefaults.standard.bool(forKey: "justSuppers")
     @State var editMode = EditMode.inactive
     @State var selectedTab = 1
+    @State var showWelcomeView = false
     
     var filteredDays: [Day] {
         days.filter { day in
@@ -46,5 +47,14 @@ struct RootView: View {
                 }
         }
         .navigationViewStyle(.stack)
+        .onAppear {
+            if !UserDefaults.standard.bool(forKey: "launchedBefore") {
+                UserDefaults.standard.set(true, forKey: "launchedBefore")
+                showWelcomeView = true
+            }
+        }
+        .sheet(isPresented: $showWelcomeView) {
+            WelcomeView()
+        }
     }
 }

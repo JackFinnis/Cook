@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+let NAME = "Just Cook"
+
 @main
 struct CookApp: App {
     @StateObject var dataController = DataController()
