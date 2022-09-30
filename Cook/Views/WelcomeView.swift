@@ -25,7 +25,7 @@ struct WelcomeView: View {
                 .padding(.bottom)
                 .multilineTextAlignment(.center)
             
-            WelcomeRow("Store your favourite recipes", systemName: "book", description: "Keep track of all your recipes and search them by type, speed and ingredients.")
+            WelcomeRow("Store your favourite recipes", systemName: "book", description: "Keep track of all your recipes and search them by ingredients.")
             WelcomeRow("Plan your week's meals", systemName: "calendar", description: "Make a meal plan each week and never worry about missing a meal again.")
             WelcomeRow("Manage your shopping list", systemName: "list.bullet", description: "Receive smart suggestions of ingredients you'll need each week.")
             

@@ -25,8 +25,8 @@ struct IngredientsView: View {
     var filteredIngredients: [Ingredient] {
         ingredients.filter { ingredient in
             let name = text.isEmpty || ingredient.name?.localizedCaseInsensitiveContains(text) ?? false
-            let favourite = onlyFavourites ? ingredient.favourite : true
-            return name && favourite
+//            let favourite = onlyFavourites ? ingredient.favourite : true
+            return name// && favourite
         }.sorted { one, two in
             one.recipes?.count ?? 0 > two.recipes?.count ?? 0
         }
@@ -43,6 +43,7 @@ struct IngredientsView: View {
                     if showNewIngredientField && !editMode.isEditing {
                         TextField("New Ingredient", text: $newIngredientName)
                             .id(0)
+                            .textInputAutocapitalization(.words)
                             .onSubmit(submitIngredient)
                             .focused($focused)
                             .submitLabel(.done)
@@ -76,16 +77,16 @@ struct IngredientsView: View {
                                     Image(systemName: "plus")
                                 }
                             }
-                            if someFavourites {
-                                Button {
-                                    withAnimation {
-                                        onlyFavourites.toggle()
-                                    }
-                                } label: {
-                                    Image(systemName: onlyFavourites ? "star.fill" : "star")
-                                        .foregroundColor(.yellow)
-                                }
-                            }
+//                            if someFavourites {
+//                                Button {
+//                                    withAnimation {
+//                                        onlyFavourites.toggle()
+//                                    }
+//                                } label: {
+//                                    Image(systemName: onlyFavourites ? "star.fill" : "star")
+//                                        .foregroundColor(.yellow)
+//                                }
+//                            }
                             if ingredients.isNotEmpty {
                                 EditButton(editMode: $editMode)
                             }

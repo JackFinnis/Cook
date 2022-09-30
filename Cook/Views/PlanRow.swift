@@ -59,7 +59,7 @@ struct PlanRow: View {
                 }
             } else {
                 NavigationLink {
-                    RecipesView(selectedType: .meal, selectedRecipe: $selectedRecipe, picker: true)
+                    RecipesView(selectedRecipe: $selectedRecipe, picker: true)
                         .onChange(of: selectedRecipe, perform: didSelectRecipe)
                 } label: {
                     Row {
@@ -67,7 +67,7 @@ struct PlanRow: View {
                     } trailing: {
                         if day == nextDayToPlan {
                             if meal == .lunch || justSuppers || !justSuppers && day.lunch != nil {
-                                Text("Select a meal")
+                                Text("Select a Meal")
                                     .foregroundColor(.accentColor)
                             }
                         }
@@ -88,7 +88,7 @@ struct PlanRow: View {
                 Button(role: .destructive) {
                     removeRecipe(recipe)
                 } label: {
-                    Label("Remove recipe", systemImage: "minus.circle")
+                    Label("Remove Recipe", systemImage: "minus.circle")
                 }
             }
         }

@@ -28,18 +28,18 @@ struct RecipesView: View {
         recipes.reduce(false) { $0 || $1.favourite }
     }
     var noActiveFilters: Bool {
-        !onlyShowFavourites && selectedType == nil && selectedSpeed == nil
+        !onlyShowFavourites// && selectedType == nil && selectedSpeed == nil
     }
     var filteredRecipes: [Recipe] {
         recipes.filter { recipe in
             let favourite = onlyShowFavourites ? recipe.favourite : true
-            let type = recipe.type == selectedType?.rawValue ?? recipe.type
-            let speed = recipe.speed == selectedSpeed?.rawValue ?? recipe.speed
+//            let type = recipe.type == selectedType?.rawValue ?? recipe.type
+//            let speed = recipe.speed == selectedSpeed?.rawValue ?? recipe.speed
             let name = text.isEmpty || recipe.name?.localizedCaseInsensitiveContains(text) ?? false
             let ingredients = (recipe.ingredients?.allObjects as? [Ingredient] ?? []).reduce(false) { result, ingredient in
                 result || ingredient.name?.localizedCaseInsensitiveContains(text) ?? false
             }
-            return (ingredients || name) && type && speed && favourite
+            return (ingredients || name) && favourite// && type && speed&& type && speed
         }.sorted { one, two in
             (one.lunches?.count ?? 0) + (one.suppers?.count ?? 0) >
             (two.lunches?.count ?? 0) + (two.suppers?.count ?? 0)
@@ -56,13 +56,14 @@ struct RecipesView: View {
                     
                     if showNewRecipeField && !editMode.isEditing {
                         TextField("New Recipe", text: $newRecipeName)
-                            .id("New Recipe")
+                            .id(0)
+                            .textInputAutocapitalization(.words)
                             .submitLabel(.done)
                             .focused($focused)
                             .onSubmit(submitNewRecipe)
                             .onChange(of: newRecipeName) { _ in
                                 withAnimation {
-                                    list.scrollTo("New Recipe")
+                                    list.scrollTo(0)
                                 }
                             }
                     }
@@ -73,7 +74,7 @@ struct RecipesView: View {
                 .navigationBarTitleDisplayMode(.large)
                 .searchable(text: $text.animation(), placement: .navigationBarDrawer(displayMode: .always), prompt: "Search Recipes, Ingredients")
                 .overlay(alignment: .bottom) {
-                    Text(filteredRecipes.count.formattedPlural("recipe") + ((noActiveFilters && text.isEmpty) ? "" : " found"))
+                    Text(filteredRecipes.count.formattedPlural(onlyShowFavourites ? "favourite" : "recipe") + ((noActiveFilters && text.isEmpty) ? "" : " found"))
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                         .animation(.none)
@@ -86,16 +87,23 @@ struct RecipesView: View {
                                 Button {
                                     withAnimation {
                                         showNewRecipeField = true
-                                        list.scrollTo("New Recipe")
+                                        list.scrollTo(0)
                                         focused = true
                                     }
                                 } label: {
                                     Image(systemName: "plus")
                                 }
                             }
-                            
-                            filterMenu
-                            
+                            if someFavourites {
+                                Button {
+                                    withAnimation {
+                                        onlyShowFavourites.toggle()
+                                    }
+                                } label: {
+                                    Image(systemName: onlyShowFavourites ? "star.fill" : "star")
+                                        .foregroundColor(.yellow)
+                                }
+                            }
                             if recipes.isNotEmpty {
                                 EditButton(editMode: $editMode)
                             }
@@ -123,21 +131,21 @@ struct RecipesView: View {
         Menu {
             if someFavourites {
                 Toggle(isOn: $onlyShowFavourites) {
-                    Label("Filter favourites", systemImage: "star")
+                    Label("Filter Favourites", systemImage: "star")
                 }
             }
             
-            Picker("Recipe type", selection: $selectedType) {
-                Text("All types")
+            Picker("Recipe Type", selection: $selectedType) {
+                Text("All Types")
                     .tag(nil as RecipeType?)
                 ForEach(RecipeType.allCases, id: \.self) { type in
                     Text(type.name + "s")
                         .tag(type as RecipeType?)
                 }
             }
-            
+
             Picker("Recipe speed", selection: $selectedSpeed) {
-                Text("All speeds")
+                Text("All Speeds")
                     .tag(nil as Speed?)
                 ForEach(Speed.sorted, id: \.self) { speed in
                     Text(speed.name)

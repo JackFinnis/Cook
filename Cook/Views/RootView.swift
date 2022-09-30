@@ -52,9 +52,28 @@ struct RootView: View {
                 UserDefaults.standard.set(true, forKey: "launchedBefore")
                 showWelcomeView = true
             }
+            if !UserDefaults.standard.bool(forKey: "populatedExampleData") {
+                UserDefaults.standard.set(true, forKey: "populatedExampleData")
+                populateExampleData()
+            }
         }
         .sheet(isPresented: $showWelcomeView) {
             WelcomeView()
         }
+    }
+    
+    func populateExampleData() {
+        let recipe = Recipe(context: context)
+        recipe.name = "Stir Fry"
+        
+        let ingredientNames = ["Noodles", "Chicken", "Mangetout", "Spring onion", "Soy sauce"]
+        for name in ingredientNames {
+            let ingredient = Ingredient(context: context)
+            ingredient.name = name
+            recipe.addToIngredients(ingredient)
+        }
+        
+        try? context.save()
+        context.refreshAllObjects()
     }
 }

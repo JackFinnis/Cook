@@ -21,34 +21,39 @@ struct IngredientRow: View {
             Text(ingredient.name ?? "")
                 .tag(ingredient)
         } trailing: {
-            if editMode.isEditing || ingredient.favourite {
-                Image(systemName: ingredient.favourite ? "star.fill" : "star")
-                    .foregroundColor(.yellow)
-                    .padding(.trailing, editMode.isEditing ? 10 : 0)
-                    .transition(.move(edge: .trailing).combined(with: .opacity))
-                    .onTapGesture {
-                        if editMode.isEditing {
-                            toggleFavourite()
-                        }
-                    }
-            }
+//            if editMode.isEditing || ingredient.favourite {
+//                Image(systemName: ingredient.favourite ? "star.fill" : "star")
+//                    .foregroundColor(.yellow)
+//                    .padding(.trailing, editMode.isEditing ? 10 : 0)
+//                    .transition(.move(edge: .trailing).combined(with: .opacity))
+//                    .onTapGesture {
+//                        if editMode.isEditing {
+//                            toggleFavourite()
+//                        }
+//                    }
+//            }
             DeleteButton(editMode: editMode) {
                 deleteIngredient()
             }
         }
         .buttonStyle(.borderless)
         .tag(ingredient)
+        .swipeActions {
+            Button("Remove", role: .destructive) {
+                toggleSelection()
+            }
+        }
         .background {
             Color.clear.contextMenu {
-                Button {
-                    toggleFavourite()
-                } label: {
-                    Label(ingredient.favourite ? "Unfavourite" : "Favourite", systemImage: ingredient.favourite ? "star.slash" : "star")
-                }
+//                Button {
+//                    toggleFavourite()
+//                } label: {
+//                    Label(ingredient.favourite ? "Unfavourite" : "Favourite", systemImage: ingredient.favourite ? "star.slash" : "star")
+//                }
                 Button(role: selected ? .destructive : .none) {
                     toggleSelection()
                 } label: {
-                    Label(selected ? "Remove ingredient" : "Add ingredient", systemImage: selected ? "minus.circle" : "checkmark.circle")
+                    Label(selected ? "Remove Ingredient" : "Add Ingredient", systemImage: selected ? "minus.circle" : "checkmark.circle")
                 }
                 Button(role: .destructive) {
                     deleteIngredient()

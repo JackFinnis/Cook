@@ -16,6 +16,7 @@ struct RecipeView: View {
     @State var editMode = EditMode.inactive
     @State var showEditRecipeView = false
     @State var newIngredientName = ""
+    @State var showIngredientsView = false
     @State var name = ""
     @State var animate = false
     @State var ingredients = Set<Ingredient>()
@@ -35,50 +36,30 @@ struct RecipeView: View {
     
     var body: some View {
         ScrollViewReader { form in
-            VStack(spacing: 0) {
-                VStack {
-                    TextField("Name", text: $name)
-                        .onChange(of: name, perform: saveName)
-                        .font(.system(size: 34).weight(name.isEmpty ? .regular : .bold))
-                        .submitLabel(.done)
-                    
-                    Picker("Recipe Type", selection: $type) {
-                        ForEach(RecipeType.allCases, id: \.self) { type in
-                            Text(type.name)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-                    .onChange(of: type, perform: saveType)
-                    
-                    Picker("Recipe Speed", selection: $speed) {
-                        ForEach(Speed.sorted, id: \.self) { speed in
-                            Text(speed.name)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-                    .onChange(of: speed, perform: saveSpeed)
-                    
-                    Row {
-                        Text(ingredients.count.formattedPlural("Ingredient"))
-                            .animation(.none, value: ingredients)
-                            .font(.title2.weight(.semibold))
-                    } trailing: {
-                        if !editMode.isEditing {
-                            Button {
-                                withAnimation {
-                                    focused = true
-                                    form.scrollTo(0)
-                                }
-                            } label: {
-                                Image(systemName: "plus")
-                                    .font(.title2)
-                            }
-                        }
-                    }
-                    .padding(.top)
-                    .padding(.bottom, 5)
-                }
-                .padding(.horizontal)
+            VStack {
+                TextField("Name", text: $name)
+                    .onChange(of: name, perform: saveName)
+                    .font(.system(size: 34).weight(name.isEmpty ? .regular : .bold))
+                    .submitLabel(.done)
+                    .padding(.horizontal)
+                
+//                VStack {
+//                    Picker("Recipe Type", selection: $type) {
+//                        ForEach(RecipeType.allCases, id: \.self) { type in
+//                            Text(type.name)
+//                        }
+//                    }
+//                    .pickerStyle(.segmented)
+//                    .onChange(of: type, perform: saveType)
+//
+//                    Picker("Recipe Speed", selection: $speed) {
+//                        ForEach(Speed.sorted, id: \.self) { speed in
+//                            Text(speed.name)
+//                        }
+//                    }
+//                    .pickerStyle(.segmented)
+//                    .onChange(of: speed, perform: saveSpeed)
+//                }
                 
                 Form {
                     Section {
@@ -87,25 +68,12 @@ struct RecipeView: View {
                         }
                         
                         if !editMode.isEditing {
-                            NavigationLink {
-                                IngredientsView(selection: $ingredients)
-                            } label: {
-                                Row {
-                                    TextField("Add Ingredient", text: $newIngredientName)
-                                        .id(0)
-                                        .onSubmit(submitIngredient)
-                                        .focused($focused)
-                                        .submitLabel(.done)
-                                        .onChange(of: newIngredientName) { _ in
-                                            withAnimation {
-                                                form.scrollTo("Add Ingredient")
-                                            }
-                                        }
-                                } trailing: {
-                                    Text("Browse")
-                                        .foregroundColor(.accentColor)
-                                }
-                            }
+                            TextField("Add Ingredient", text: $newIngredientName)
+                                .id(0)
+                                .textInputAutocapitalization(.words)
+                                .onSubmit(submitIngredient)
+                                .focused($focused)
+                                .submitLabel(.done)
                         }
                     }
                     
@@ -124,53 +92,90 @@ struct RecipeView: View {
                     }
                 }
             }
-        }
-        .background(Color(.systemGroupedBackground))
-        .onChange(of: ingredients, perform: saveIngredients)
-        .animation(animate ? .default : .none, value: sortedIngredients)
-        .navigationBarTitleDisplayMode(.inline)
-        .onAppear {
-            name = recipe.name ?? ""
-            type = RecipeType(rawValue: recipe.type) ?? .meal
-            speed = Speed(rawValue: recipe.speed) ?? .medium
-            favourite = recipe.favourite
-            ingredients = Set(recipe.ingredients?.allObjects as? [Ingredient] ?? [])
-        }
-        .task {
-            animate = true
-        }
-        .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                HStack {
-                    Button {
-                        if favourite {
-                            favourite = false
-                        } else {
-                            shake = true
-                            withAnimation(.easeInOut(duration: 0.25)) {
-                                favourite = true
-                                scale = 1.3
-                            }
-                            withAnimation(.spring(response: 0.2, dampingFraction: 0.2, blendDuration: 0.2)) {
-                                shake = false
-                            }
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-                                withAnimation(.easeInOut(duration: 0.25)) {
-                                    scale = 1
+            .overlay(alignment: .bottom) {
+                Text(ingredients.count.formattedPlural("ingredient"))
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                    .animation(.none)
+                    .padding(10)
+            }
+            .background(Color(.systemGroupedBackground))
+            .navigationBarTitleDisplayMode(.inline)
+            .onChange(of: ingredients, perform: saveIngredients)
+            .onChange(of: newIngredientName) { _ in
+                withAnimation {
+                    form.scrollTo(0)
+                }
+            }
+            .animation(animate ? .default : .none, value: sortedIngredients)
+            .onAppear {
+                name = recipe.name ?? ""
+                type = RecipeType(rawValue: recipe.type) ?? .meal
+                speed = Speed(rawValue: recipe.speed) ?? .medium
+                favourite = recipe.favourite
+                ingredients = Set(recipe.ingredients?.allObjects as? [Ingredient] ?? [])
+            }
+            .task {
+                animate = true
+            }
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    HStack {
+                        if !editMode.isEditing {
+                            Menu {
+                                Button {
+                                    withAnimation {
+                                        focused = true
+                                        form.scrollTo(0)
+                                    }
+                                } label: {
+                                    Label("Add Ingredient", systemImage: "pencil")
                                 }
+                                Button {
+                                    showIngredientsView = true
+                                } label: {
+                                    Label("Browse Ingredients", systemImage: "magnifyingglass")
+                                }
+                            } label: {
+                                Image(systemName: "plus")
+                            }
+                            .overlay {
+                                NavigationLink("", isActive: $showIngredientsView) {
+                                    IngredientsView(selection: $ingredients)
+                                }
+                                .hidden()
                             }
                         }
-                    } label: {
-                        Image(systemName: favourite ? "star.fill" : "star")
-                            .foregroundColor(.yellow)
-                            .scaleEffect(scale)
-                            .rotationEffect(.degrees(shake ? 20 : 0))
+                        Button {
+                            if favourite {
+                                favourite = false
+                            } else {
+                                shake = true
+                                withAnimation(.easeInOut(duration: 0.25)) {
+                                    favourite = true
+                                    scale = 1.3
+                                }
+                                withAnimation(.spring(response: 0.2, dampingFraction: 0.2, blendDuration: 0.2)) {
+                                    shake = false
+                                }
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                                    withAnimation(.easeInOut(duration: 0.25)) {
+                                        scale = 1
+                                    }
+                                }
+                            }
+                        } label: {
+                            Image(systemName: favourite ? "star.fill" : "star")
+                                .foregroundColor(.yellow)
+                                .scaleEffect(scale)
+                                .rotationEffect(.degrees(shake ? 20 : 0))
+                        }
+                        .onChange(of: favourite, perform: saveFavourite)
+                        
+                        EditButton(editMode: $editMode)
                     }
-                    .onChange(of: favourite, perform: saveFavourite)
-                    
-                    EditButton(editMode: $editMode)
+                    .animation(.none, value: editMode)
                 }
-                .animation(.none, value: editMode)
             }
         }
     }

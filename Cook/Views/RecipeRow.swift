@@ -32,19 +32,19 @@ struct RecipeRow: View {
                 }
             }
         } trailing: {
-            if editMode.isEditing {
-                Button {
-                    toggleFavourite()
-                } label: {
-                    Image(systemName: recipe.favourite ? "star.fill" : "star")
-                        .foregroundColor(.yellow)
-                }
-                .padding(.trailing, editMode.isEditing ? 10 : 0)
-                .transition(.move(edge: .trailing).combined(with: .opacity))
-            } else if picker && recipe.favourite {
-                Image(systemName: "star.fill")
-                    .foregroundColor(.yellow)
-            }
+//            if editMode.isEditing {
+//                Button {
+//                    toggleFavourite()
+//                } label: {
+//                    Image(systemName: recipe.favourite ? "star.fill" : "star")
+//                        .foregroundColor(.yellow)
+//                }
+//                .padding(.trailing, editMode.isEditing ? 10 : 0)
+//                .transition(.move(edge: .trailing).combined(with: .opacity))
+//            } else if picker && recipe.favourite {
+//                Image(systemName: "star.fill")
+//                    .foregroundColor(.yellow)
+//            }
             
             DeleteButton(editMode: editMode) {
                 showDeleteConfirmation = true
@@ -68,13 +68,13 @@ struct RecipeRow: View {
                     Button {
                         selectedRecipe = recipe
                     } label: {
-                        Label("Select recipe", systemImage: "checkmark.circle")
+                        Label("Select Recipe", systemImage: "checkmark.circle")
                     }
                 }
                 Button(role: .destructive) {
                     deleteRecipe()
                 } label: {
-                    Label("Delete recipe", systemImage: "trash")
+                    Label("Delete Recipe", systemImage: "trash")
                 }
             }
             .id(UUID())

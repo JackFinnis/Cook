@@ -69,6 +69,7 @@ struct ListView: View {
                     
                     TextField("Add Item", text: $newIngredientName)
                         .id(0)
+                        .textInputAutocapitalization(.words)
                         .onSubmit(submitIngredient)
                         .submitLabel(.done)
                         .focused($focused)
@@ -84,11 +85,9 @@ struct ListView: View {
                         }
                     } header: {
                         if ingredientsNeeded.isEmpty {
-                            Button("Make a plan") {
+                            ErrorLabel("Make a plan", systemName: "calendar") {
                                 selectedTab = 1
                             }
-                            .font(.body)
-                            .buttonStyle(.borderedProminent)
                             .horizontallyCentred()
                         } else {
                             Text(filteredIngredientsNeeded.isEmpty ? "Ready for this week" : "Needed this week")
@@ -97,14 +96,14 @@ struct ListView: View {
                     }
                     .headerProminence(.increased)
                     
-                    if filteredFavourites.isNotEmpty {
-                        Section("Favourites") {
-                            ForEach(filteredFavourites) { ingredient in
-                                IngredientRow(ingredient: ingredient, selection: $ingredients, editMode: .inactive)
-                            }
-                        }
-                        .headerProminence(.increased)
-                    }
+//                    if filteredFavourites.isNotEmpty {
+//                        Section("Favourites") {
+//                            ForEach(filteredFavourites) { ingredient in
+//                                IngredientRow(ingredient: ingredient, selection: $ingredients, editMode: .inactive)
+//                            }
+//                        }
+//                        .headerProminence(.increased)
+//                    }
                 }
                 .listStyle(.insetGrouped)
                 .environment(\.editMode, .constant(.active))
@@ -129,17 +128,17 @@ struct ListView: View {
                                     focused = true
                                 }
                             } label: {
-                                Label("Add an item", systemImage: "pencil")
+                                Label("Add Item", systemImage: "pencil")
                             }
                             Button {
                                 showRecipesView = true
                             } label: {
-                                Label("From a recipe", systemImage: "book")
+                                Label("From a Recipe", systemImage: "book")
                             }
                             Button {
                                 showIngredientsView = true
                             } label: {
-                                Label("Browse ingredients", systemImage: "magnifyingglass")
+                                Label("Browse Ingredients", systemImage: "magnifyingglass")
                             }
                         } label: {
                             Image(systemName: "plus")
