@@ -12,6 +12,7 @@ struct PlanView: View {
     @Environment(\.managedObjectContext) var context
     @FetchRequest(sortDescriptors: []) var days: FetchedResults<Day>
     @State var editMode = EditMode.inactive
+    @State var showInfoView = false
     
     @Binding var justSuppers: Bool
     @Binding var repeatEvery: Repeat
@@ -56,22 +57,33 @@ struct PlanView: View {
                 }
                 ToolbarItem(placement: .primaryAction) {
                     if !editMode.isEditing {
-                        Menu {
-                            Toggle("Only plan suppers", isOn: $justSuppers.animation())
-                            
-                            Picker("Repeat Every", selection: $repeatEvery) {
-                                let none = Repeat(weeks: 0)
-                                Text(none.name)
-                                    .tag(none)
+                        HStack {
+                            Menu {
+                                Toggle("Only plan suppers", isOn: $justSuppers.animation())
                                 
-                                ForEach(1...4, id: \.self) { weeks in
-                                    let repeatEvery = Repeat(weeks: weeks)
-                                    Text(repeatEvery.name)
-                                        .tag(repeatEvery)
+                                Picker("Repeat Every", selection: $repeatEvery) {
+                                    let none = Repeat(weeks: 0)
+                                    Text(none.name)
+                                        .tag(none)
+                                    
+                                    ForEach(1...4, id: \.self) { weeks in
+                                        let repeatEvery = Repeat(weeks: weeks)
+                                        Text(repeatEvery.name)
+                                            .tag(repeatEvery)
+                                    }
                                 }
+                            } label: {
+                                Image(systemName: "gear")
                             }
-                        } label: {
-                            Image(systemName: "ellipsis.circle")
+                            
+                            Button {
+                                showInfoView = true
+                            } label: {
+                                Image(systemName: "info.circle")
+                            }
+                            .sheet(isPresented: $showInfoView) {
+                                InfoView()
+                            }
                         }
                     }
                 }

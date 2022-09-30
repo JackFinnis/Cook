@@ -70,7 +70,6 @@ struct RecipeView: View {
                         if !editMode.isEditing {
                             TextField("Add Ingredient", text: $newIngredientName)
                                 .id(0)
-                                .textInputAutocapitalization(.words)
                                 .onSubmit(submitIngredient)
                                 .focused($focused)
                                 .submitLabel(.done)
@@ -102,11 +101,6 @@ struct RecipeView: View {
             .background(Color(.systemGroupedBackground))
             .navigationBarTitleDisplayMode(.inline)
             .onChange(of: ingredients, perform: saveIngredients)
-            .onChange(of: newIngredientName) { _ in
-                withAnimation {
-                    form.scrollTo(0)
-                }
-            }
             .animation(animate ? .default : .none, value: sortedIngredients)
             .onAppear {
                 name = recipe.name ?? ""

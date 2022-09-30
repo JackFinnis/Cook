@@ -43,13 +43,9 @@ struct IngredientsView: View {
                     if showNewIngredientField && !editMode.isEditing {
                         TextField("New Ingredient", text: $newIngredientName)
                             .id(0)
-                            .textInputAutocapitalization(.words)
                             .onSubmit(submitIngredient)
                             .focused($focused)
                             .submitLabel(.done)
-                            .onChange(of: newIngredientName) { _ in
-                                list.scrollTo(0)
-                            }
                     }
                 }
                 .navigationTitle("Ingredients")

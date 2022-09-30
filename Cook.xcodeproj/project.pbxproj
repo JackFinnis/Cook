@@ -37,6 +37,7 @@
 		04C895D328E5B8B200F94E01 /* IngredientRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C895D228E5B8B200F94E01 /* IngredientRow.swift */; };
 		04C895D528E5C2C700F94E01 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C895D428E5C2C700F94E01 /* String.swift */; };
 		04C895DF28E65DF700F94E01 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C895DA28E65CFC00F94E01 /* WelcomeView.swift */; };
+		04DC76F528E7A52E00B07616 /* InfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DC76F328E7A52E00B07616 /* InfoView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -71,6 +72,7 @@
 		04C895D228E5B8B200F94E01 /* IngredientRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientRow.swift; sourceTree = "<group>"; };
 		04C895D428E5C2C700F94E01 /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		04C895DA28E65CFC00F94E01 /* WelcomeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
+		04DC76F328E7A52E00B07616 /* InfoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,6 +120,7 @@
 			children = (
 				04BA5E7C28E1133D0080EF20 /* RootView.swift */,
 				04C895DA28E65CFC00F94E01 /* WelcomeView.swift */,
+				04DC76F328E7A52E00B07616 /* InfoView.swift */,
 				04BA5E8428E115760080EF20 /* PlanView.swift */,
 				04C895CE28E5A27000F94E01 /* PlanList.swift */,
 				04BA5EAB28E2737A0080EF20 /* PlanRow.swift */,
@@ -241,6 +244,7 @@
 				04BA5E9228E11C630080EF20 /* Haptics.swift in Sources */,
 				04C895C128E3916400F94E01 /* ErrorLabel.swift in Sources */,
 				04BA5E6F28E113080080EF20 /* CookApp.swift in Sources */,
+				04DC76F528E7A52E00B07616 /* InfoView.swift in Sources */,
 				04BA5EAE28E275520080EF20 /* Meal.swift in Sources */,
 				04BA5EAC28E2737A0080EF20 /* PlanRow.swift in Sources */,
 				04BA5E8E28E11AB70080EF20 /* RecipeView.swift in Sources */,

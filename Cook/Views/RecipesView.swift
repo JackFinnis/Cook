@@ -57,15 +57,9 @@ struct RecipesView: View {
                     if showNewRecipeField && !editMode.isEditing {
                         TextField("New Recipe", text: $newRecipeName)
                             .id(0)
-                            .textInputAutocapitalization(.words)
                             .submitLabel(.done)
                             .focused($focused)
                             .onSubmit(submitNewRecipe)
-                            .onChange(of: newRecipeName) { _ in
-                                withAnimation {
-                                    list.scrollTo(0)
-                                }
-                            }
                     }
                 }
                 .environment(\.editMode, .constant(picker ? .active : .inactive))

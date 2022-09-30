@@ -69,15 +69,9 @@ struct ListView: View {
                     
                     TextField("Add Item", text: $newIngredientName)
                         .id(0)
-                        .textInputAutocapitalization(.words)
                         .onSubmit(submitIngredient)
                         .submitLabel(.done)
                         .focused($focused)
-                        .onChange(of: newIngredientName) { _ in
-                            withAnimation {
-                                list.scrollTo(0)
-                            }
-                        }
                     
                     Section {
                         ForEach(filteredIngredientsNeeded) { ingredient in
