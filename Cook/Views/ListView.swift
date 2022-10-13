@@ -14,12 +14,12 @@ struct ListView: View {
     @FetchRequest(sortDescriptors: []) var days: FetchedResults<Day>
     @FocusState var focused: Bool
     @State var ingredients = Set<Ingredient>()
-    @State var selectedIngredient: Ingredient?
     @State var newIngredientName = ""
     @State var animate = false
     @State var showRecipesView = false
     @State var showIngredientsView = false
     @State var selectedRecipe: Recipe?
+    @State var justDeletedIngredient: Ingredient?
     
     @Binding var selectedTab: Int
     let filteredDays: [Day]
@@ -62,9 +62,23 @@ struct ListView: View {
     var body: some View {
         NavigationView {
             ScrollViewReader { list in
-                List(selection: $selectedIngredient) {
+                List {
                     ForEach(sortedIngredients, id: \.self) { ingredient in
-                        IngredientRow(ingredient: ingredient, selection: $ingredients, editMode: .inactive)
+                        HStack {
+                            Button {
+                                justDeletedIngredient = ingredient
+                                Haptics.tap()
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                    ingredients.remove(ingredient)
+                                }
+                            } label: {
+                                let justDeleted = justDeletedIngredient == ingredient
+                                Image(systemName: justDeleted ? "checkmark.circle.fill" : "circle")
+                                    .foregroundColor(justDeleted ? .accentColor : Color(uiColor: .placeholderText))
+                                    .font(.title2)
+                            }
+                            Text(ingredient.name ?? "")
+                        }
                     }
                     
                     TextField("Add Item", text: $newIngredientName)
@@ -75,7 +89,16 @@ struct ListView: View {
                     
                     Section {
                         ForEach(filteredIngredientsNeeded) { ingredient in
-                            IngredientRow(ingredient: ingredient, selection: $ingredients, editMode: .inactive)
+                            Row {
+                                Text(ingredient.name ?? "")
+                            } trailing: {
+                                Button {
+                                    ingredients.insert(ingredient)
+                                } label: {
+                                    Image(systemName: "plus.circle")
+                                        .font(.title2)
+                                }
+                            }
                         }
                     } header: {
                         if ingredientsNeeded.isEmpty {
@@ -84,8 +107,19 @@ struct ListView: View {
                             }
                             .horizontallyCentred()
                         } else {
-                            Text(filteredIngredientsNeeded.isEmpty ? "Ready for this week" : "Needed this week")
-                                .animation(.none)
+                            Row {
+                                Text(filteredIngredientsNeeded.isEmpty ? "Ready for this week" : "Needed this week")
+                                    .animation(.none)
+                            } trailing: {
+                                if filteredIngredientsNeeded.isNotEmpty {
+                                    Button("Add All") {
+                                        for ingredient in filteredIngredientsNeeded {
+                                            ingredients.insert(ingredient)
+                                        }
+                                    }
+                                    .font(.body)
+                                }
+                            }
                         }
                     }
                     .headerProminence(.increased)
@@ -100,11 +134,9 @@ struct ListView: View {
 //                    }
                 }
                 .listStyle(.insetGrouped)
-                .environment(\.editMode, .constant(.active))
                 .animation(animate ? .default : .none, value: ingredients)
                 .navigationTitle("Shopping List")
                 .onAppear(perform: updateList)
-                .onChange(of: selectedIngredient, perform: newSelectedIngredient)
                 .onChange(of: ingredients, perform: saveIngredients)
                 .overlay(alignment: .bottom) {
                     Text(sortedIngredients.count.formattedPlural("item"))
@@ -185,6 +217,7 @@ struct ListView: View {
     }
     
     func saveIngredients(ingredients: Set<Ingredient>) {
+        justDeletedIngredient = nil
         list?.removeFromIngredients(list?.ingredients ?? [])
         for ingredient in ingredients {
             list?.addToIngredients(ingredient)
@@ -192,17 +225,21 @@ struct ListView: View {
         try? context.save()
     }
     
-    func newSelectedIngredient(_ newSelectedIngredient: Ingredient?) {
-        if let newSelectedIngredient {
-            if ingredients.contains(newSelectedIngredient) {
-                ingredients.remove(newSelectedIngredient)
-                Haptics.tap()
-            } else {
-                ingredients.insert(newSelectedIngredient)
-            }
-            self.selectedIngredient = nil
-        }
-    }
+//    func newSelectedIngredient(_ newSelectedIngredient: Ingredient?) {
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+//            if let newSelectedIngredient {
+//                if ingredients.contains(newSelectedIngredient) {
+//                    ingredients.remove(newSelectedIngredient)
+//                    Haptics.tap()
+//                } else {
+//                    ingredients.insert(newSelectedIngredient)
+//                }
+//            }
+//            if self.selectedIngredient == newSelectedIngredient {
+//                self.selectedIngredient = nil
+//            }
+//        }
+//    }
     
     func updateList() {
         let list = list ?? ShoppingList(context: context)

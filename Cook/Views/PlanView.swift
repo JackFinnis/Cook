@@ -81,12 +81,12 @@ struct PlanView: View {
                             } label: {
                                 Image(systemName: "info.circle")
                             }
-                            .sheet(isPresented: $showInfoView) {
-                                InfoView()
-                            }
                         }
                     }
                 }
+            }
+            .sheet(isPresented: $showInfoView) {
+                InfoView()
             }
         }
     }

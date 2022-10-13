@@ -20,11 +20,11 @@ struct InfoView: View {
                         Image("logo")
                             .resizable()
                             .scaledToFit()
-                            .frame(height: 70)
-                            .cornerRadius(15)
+                            .frame(height: 100)
+                            .cornerRadius(20)
                             .horizontallyCentred()
                         Text(NAME)
-                            .font(.headline)
+                            .font(.title3.bold())
                         Text("Version 1.0")
                             .font(.caption)
                             .foregroundColor(.secondary)
@@ -40,7 +40,7 @@ struct InfoView: View {
                 }
                 .headerProminence(.increased)
                 
-                Section {
+                Section("Contribute") {
                     Button {
                         if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
                             SKStoreReviewController.requestReview(in: scene)
@@ -78,7 +78,7 @@ struct InfoView: View {
                     }
                 }
                 
-                Section {
+                Section("Support") {
                     Button {
                         let url = URL(string: "mailto:" + EMAIL + "?subject=\(NAME.replacingOccurrences(of: " ", with: "%20"))%20Support")!
                         UIApplication.shared.open(url)

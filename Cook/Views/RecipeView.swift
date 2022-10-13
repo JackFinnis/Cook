@@ -29,7 +29,8 @@ struct RecipeView: View {
     @ObservedObject var recipe: Recipe
     
     var sortedIngredients: [Ingredient] {
-        ingredients.sorted { one, two in
+        ingredients.filter { ($0.name ?? "").isNotEmpty }
+            .sorted { one, two in
             one.name ?? "" < two.name ?? ""
         }
     }
