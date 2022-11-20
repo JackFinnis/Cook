@@ -20,6 +20,7 @@ struct ListView: View {
     @State var showIngredientsView = false
     @State var selectedRecipe: Recipe?
     @State var justDeletedIngredient: Ingredient?
+    @State var recentlyRemoved = [Ingredient]()
     
     @Binding var selectedTab: Int
     let filteredDays: [Day]
@@ -67,6 +68,7 @@ struct ListView: View {
                         HStack {
                             Button {
                                 justDeletedIngredient = ingredient
+                                recentlyRemoved.append(ingredient)
                                 Haptics.tap()
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                                     ingredients.remove(ingredient)
@@ -146,6 +148,16 @@ struct ListView: View {
                         .padding(10)
                 }
                 .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        if let recent = recentlyRemoved.last {
+                            Button {
+                                ingredients.insert(recent)
+                                recentlyRemoved.removeAll { $0.name == recent.name }
+                            } label: {
+                                Image(systemName: "arrow.counterclockwise")
+                            }
+                        }
+                    }
                     ToolbarItem(placement: .primaryAction) {
                         Menu {
                             Button {
